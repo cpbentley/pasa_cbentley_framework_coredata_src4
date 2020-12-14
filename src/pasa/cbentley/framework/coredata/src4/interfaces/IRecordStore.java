@@ -14,7 +14,7 @@ import pasa.cbentley.framework.coredata.src4.ex.StoreNotOpenException;
  * <br>
  * Implementations adapt to this specification.
  * <br>
- * @author Mordan
+ * @author Charles-Philip Bentley
  *
  */
 public interface IRecordStore extends IStringable {

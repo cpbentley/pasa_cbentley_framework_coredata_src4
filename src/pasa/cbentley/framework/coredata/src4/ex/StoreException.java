@@ -1,7 +1,9 @@
 package pasa.cbentley.framework.coredata.src4.ex;
 
-
 public class StoreException extends RuntimeException {
+
+   private Throwable cause;
+
    public StoreException() {
 
    }
@@ -11,6 +13,11 @@ public class StoreException extends RuntimeException {
    }
 
    public StoreException(String message, Throwable cause) {
-      super(message, cause);
+      super(message);
+      this.cause = cause;
+   }
+
+   public Throwable getCause() {
+      return cause;
    }
 }

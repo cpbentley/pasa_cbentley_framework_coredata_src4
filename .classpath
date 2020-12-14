@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_core_src4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_byteobjects_src4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/java_src4_compat_j2se"/>
+	<classpathentry kind="lib" path="/pasa_cbentley_core_src4/libs/cldcapi11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

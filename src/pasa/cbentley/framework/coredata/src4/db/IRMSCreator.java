@@ -1,8 +1,8 @@
-//package pasa.cbentley.framework.coredata.src4.interfaces;
+//package pasa.cbentley.framework.coredata.src4.db;
 //
-//import pasa.cbentley.framework.coredata.src4.db.IByteStore;
 //import pasa.cbentley.framework.coredata.src4.ex.StoreException;
 //import pasa.cbentley.framework.coredata.src4.ex.StoreNotFoundException;
+//import pasa.cbentley.framework.coredata.src4.interfaces.IRecordStore;
 //
 ///**
 // * Interface to a basic database system storing byte arrays.

@@ -3,7 +3,7 @@ package pasa.cbentley.framework.coredata.src4.interfaces;
 /**
  * A listener interface for receiving Record Changed/Added/Deleted events from a record store. 
  * 
- * @author Mordan
+ * @author Charles-Philip Bentley
  *
  */
 public interface IRecordListener {
