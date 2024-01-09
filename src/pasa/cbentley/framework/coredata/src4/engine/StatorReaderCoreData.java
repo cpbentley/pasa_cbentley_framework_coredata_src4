@@ -6,6 +6,7 @@ import pasa.cbentley.core.src4.ctx.CtxManager;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.io.BAByteIS;
 import pasa.cbentley.core.src4.io.BADataIS;
+import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.stator.StatorReader;
 import pasa.cbentley.framework.coredata.src4.ctx.CoreDataCtx;
 import pasa.cbentley.framework.coredata.src4.db.IByteRecordStoreFactory;
@@ -15,12 +16,19 @@ import pasa.cbentley.framework.coredata.src4.ex.StoreNotFoundException;
 import pasa.cbentley.framework.coredata.src4.ex.StoreNotOpenException;
 import pasa.cbentley.framework.coredata.src4.interfaces.IRecordStore;
 
+/**
+ * 
+ * @author Charles Bentley
+ *
+ */
 public class StatorReaderCoreData extends StatorReaderBO {
+   
    protected final CoreDataCtx  cdc;
 
    private String               storeName;
 
    private StatorReaderCoreData readerContext;
+
    private StatorReaderCoreData readerView;
 
    public StatorReaderCoreData(CoreDataCtx cdc, String storeName) {
@@ -41,7 +49,7 @@ public class StatorReaderCoreData extends StatorReaderBO {
             readerContext.loadDataFromID(TYPE_3_CTX);
          }
          return readerContext;
-      } else if(type == TYPE_1_VIEW) {
+      } else if (type == TYPE_1_VIEW) {
          if (readerView == null) {
             readerView = new StatorReaderCoreData(cdc, storeName, this);
             readerView.loadDataFromID(TYPE_1_VIEW);
@@ -97,4 +105,24 @@ public class StatorReaderCoreData extends StatorReaderBO {
       }
       this.data = data; //set null if none
    }
+
+   //#mdebug
+   public void toString(Dctx dc) {
+      dc.root(this, StatorReaderCoreData.class, "@line105");
+      toStringPrivate(dc);
+      super.toString(dc.sup());
+   }
+
+   private void toStringPrivate(Dctx dc) {
+      dc.appendVarWithSpace("storeName", storeName);
+   }
+
+   public void toString1Line(Dctx dc) {
+      dc.root1Line(this, StatorReaderCoreData.class);
+      toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
+   }
+
+   //#enddebug
+
 }
