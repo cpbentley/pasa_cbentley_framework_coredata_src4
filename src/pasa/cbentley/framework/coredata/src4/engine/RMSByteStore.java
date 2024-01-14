@@ -1,8 +1,8 @@
 package pasa.cbentley.framework.coredata.src4.engine;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
-import pasa.cbentley.byteobjects.src4.ctx.IFlagsToStringBO;
-import pasa.cbentley.core.src4.ctx.IFlagsToString;
+import pasa.cbentley.byteobjects.src4.ctx.IToStringFlagsBO;
+import pasa.cbentley.core.src4.ctx.IToStringFlags;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.helpers.StringBBuilder;
 import pasa.cbentley.core.src4.io.BADataIS;
@@ -627,7 +627,7 @@ public class RMSByteStore implements IByteStore, IStringable {
     */
    public void toStringStoreDataDebugString(IByteStore store, String rs, IByteInterpreter ib, Dctx sb) {
       sb.append("#Data ");
-      if (rmc.getBOC().toStringHasToStringFlag(IFlagsToStringBO.TOSTRING_FLAG_1_SERIALIZE)) {
+      if (rmc.getBOC().toStringHasToStringFlag(IToStringFlagsBO.TOSTRING_FLAG_1_SERIALIZE)) {
          sb.append(rs);
       }
       int num = store.getNextRecordId(rs);
@@ -637,7 +637,7 @@ public class RMSByteStore implements IByteStore, IStringable {
          sb.nl();
          sb.append("RID " + rmc.getUCtx().getStrU().prettyInt0Padd(j, numChars));
          if (b != null) {
-            if (rmc.getUCtx().toStringHasToStringFlag(IFlagsToString.FLAG_DATA_01_SUCCINT)) {
+            if (rmc.getUCtx().toStringHasToStringFlag(IToStringFlags.FLAG_DATA_01_SUCCINT)) {
                sb.append(" = [" + b.length + "bytes]\t");
                String str = rmc.getUCtx().getIU().debugString(b, 0, Math.min(10, b.length), ",");
                sb.append(str);

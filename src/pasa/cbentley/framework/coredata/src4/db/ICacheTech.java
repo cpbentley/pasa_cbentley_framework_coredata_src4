@@ -1,7 +1,7 @@
 package pasa.cbentley.framework.coredata.src4.db;
 
+import pasa.cbentley.byteobjects.src4.core.interfaces.IByteObject;
 import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
-import pasa.cbentley.byteobjects.src4.tech.ITechByteObject;
 
 /**
  * Decides the kind of cache implementation to use
@@ -11,7 +11,7 @@ import pasa.cbentley.byteobjects.src4.tech.ITechByteObject;
  * @author Charles Bentley
  *
  */
-public interface ICacheTech extends ITechByteObject {
+public interface ICacheTech extends IByteObject {
 
    public static final int CACHE_BASIC_SIZE             = A_OBJECT_BASIC_SIZE + 5;
 

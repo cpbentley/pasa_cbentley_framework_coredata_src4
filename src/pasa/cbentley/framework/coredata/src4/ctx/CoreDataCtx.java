@@ -4,7 +4,7 @@ import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.byteobjects.src4.ctx.ABOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.BOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
-import pasa.cbentley.byteobjects.src4.ctx.IFlagsToStringBO;
+import pasa.cbentley.byteobjects.src4.ctx.IToStringFlagsBO;
 import pasa.cbentley.core.src4.ctx.ACtx;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
@@ -101,7 +101,7 @@ public abstract class CoreDataCtx extends ABOCtx {
     */
    public void toStringStoreHeader(IByteStore store, String rs, Dctx sb) {
       sb.append("#Header");
-      if (boc.toStringHasToStringFlag(IFlagsToStringBO.TOSTRING_FLAG_1_SERIALIZE)) {
+      if (boc.toStringHasToStringFlag(IToStringFlagsBO.TOSTRING_FLAG_1_SERIALIZE)) {
          sb.appendVarWithSpace("rs", rs);
       }
       sb = sb.newLevel();
@@ -115,7 +115,7 @@ public abstract class CoreDataCtx extends ABOCtx {
          sb.append("Size=" + size / 1000 + "kb");
       else
          sb.append("Size=" + size + "bytes");
-      if (boc.toStringHasToStringFlag(IFlagsToStringBO.TOSTRING_FLAG_1_SERIALIZE)) {
+      if (boc.toStringHasToStringFlag(IToStringFlagsBO.TOSTRING_FLAG_1_SERIALIZE)) {
          sb.append(" version=" + store.getVersion(rs));
       }
       sb.nl();

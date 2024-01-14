@@ -3,7 +3,7 @@ package pasa.cbentley.framework.coredata.src4.index;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.byteobjects.src4.core.ByteObjectFactory;
 import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
-import pasa.cbentley.core.src4.ctx.IFlagsToString;
+import pasa.cbentley.core.src4.ctx.IToStringFlags;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.io.BADataIS;
 import pasa.cbentley.core.src4.io.BADataOS;
@@ -1721,7 +1721,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
    //#mdebug
    public void toString(Dctx sb) {
       sb.root(this, "MIndexIntToInt");
-      if (!sb.hasFlagData(cdc.getUCtx(), IFlagsToString.D_FLAG_31_IGNORE_SERIALIZE)) {
+      if (!sb.hasFlagData(cdc.getUCtx(), IToStringFlags.D_FLAG_31_IGNORE_SERIALIZE)) {
          sb.append(indexByteStoreHandle);
       }
       sb.nlLvl(indexHeader);

@@ -1,6 +1,6 @@
 package pasa.cbentley.framework.coredata.src4.index;
 
-import pasa.cbentley.byteobjects.src4.tech.ITechByteObject;
+import pasa.cbentley.byteobjects.src4.core.interfaces.IByteObject;
 import pasa.cbentley.framework.coredata.src4.ctx.IBOTypesCoreData;
 
 /**
@@ -20,7 +20,7 @@ import pasa.cbentley.framework.coredata.src4.ctx.IBOTypesCoreData;
  * @author Charles-Philip Bentley
  *
  */
-public interface ITechAreaInt extends ITechByteObject {
+public interface ITechAreaInt extends IByteObject {
 
    public static final int FLAG_DISPLAY_1_HEADER                 = 1;
 

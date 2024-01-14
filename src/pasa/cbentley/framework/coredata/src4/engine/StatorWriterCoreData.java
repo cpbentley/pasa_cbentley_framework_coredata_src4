@@ -1,7 +1,7 @@
 package pasa.cbentley.framework.coredata.src4.engine;
 
-import pasa.cbentley.byteobjects.src4.interfaces.ITechStateBO;
-import pasa.cbentley.byteobjects.src4.interfaces.StatorWriterBO;
+import pasa.cbentley.byteobjects.src4.stator.ITechStateBO;
+import pasa.cbentley.byteobjects.src4.stator.StatorWriterBO;
 import pasa.cbentley.core.src4.ctx.CtxManager;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.io.BAByteIS;

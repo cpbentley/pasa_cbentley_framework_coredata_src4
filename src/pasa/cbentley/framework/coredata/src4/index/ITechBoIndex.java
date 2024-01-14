@@ -1,6 +1,6 @@
 package pasa.cbentley.framework.coredata.src4.index;
 
-import pasa.cbentley.byteobjects.src4.tech.ITechByteObject;
+import pasa.cbentley.byteobjects.src4.core.interfaces.IByteObject;
 import pasa.cbentley.framework.coredata.src4.ctx.IBOTypesCoreData;
 import pasa.cbentley.framework.coredata.src4.db.IDataImportExport;
 
@@ -9,7 +9,7 @@ import pasa.cbentley.framework.coredata.src4.db.IDataImportExport;
  * @author Charles-Philip Bentley
  *
  */
-public interface ITechBoIndex extends ITechByteObject {
+public interface ITechBoIndex extends IByteObject {
 
    public static final int INDEX_BASIC_SIZE                = A_OBJECT_BASIC_SIZE + 20;
 

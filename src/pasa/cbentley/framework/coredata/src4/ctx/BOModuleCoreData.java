@@ -2,8 +2,8 @@ package pasa.cbentley.framework.coredata.src4.ctx;
 
 import pasa.cbentley.byteobjects.src4.core.BOModuleAbstract;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
-import pasa.cbentley.byteobjects.src4.ctx.IDebugStringable;
 import pasa.cbentley.core.src4.logging.Dctx;
+import pasa.cbentley.core.src4.logging.IDebugStringable;
 import pasa.cbentley.framework.coredata.src4.index.ITechBoIndex;
 
 /**
@@ -25,12 +25,12 @@ public class BOModuleCoreData extends BOModuleAbstract implements IDebugStringab
       toDLog().pInit("starts", this, BOModuleCoreData.class, "BOModuleBusinessObject", LVL_05_FINE, true);
    }
 
-   public ByteObject getFlagOrdered(ByteObject bo, int offset, int flag) {
+   public ByteObject getFlagOrderedBO(ByteObject bo, int offset, int flag) {
       // TODO Auto-generated method stub
       return null;
    }
 
-   public String getIDString(int did, int value) {
+   public String toStringGetDIDString(int did, int value) {
       return null;
    }
 
