@@ -11,7 +11,7 @@ import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
  * @author Charles Bentley
  *
  */
-public interface ICacheTech extends IByteObject {
+public interface IBOCacheRMS extends IByteObject {
 
    public static final int CACHE_BASIC_SIZE             = A_OBJECT_BASIC_SIZE + 5;
 

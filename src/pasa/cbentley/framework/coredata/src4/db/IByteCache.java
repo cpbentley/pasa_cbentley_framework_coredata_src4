@@ -37,8 +37,8 @@ public interface IByteCache extends IStringable {
 
    /**
     * For those {@link IByteCache} that support it modifies working mode on the fly
-    * <li> {@link ICacheTech#CACHE_MODE_0_DEFAULT}
-    * <li> {@link ICacheTech#CACHE_MODE_1_TRANSACTION}
+    * <li> {@link IBOCacheRMS#CACHE_MODE_0_DEFAULT}
+    * <li> {@link IBOCacheRMS#CACHE_MODE_1_TRANSACTION}
     * <br>
     * <br>
     * 
@@ -83,11 +83,11 @@ public interface IByteCache extends IStringable {
    public int addBytes(byte[] data, int offset, int len);
 
    /**
-    * Gets an {@link IByteCache} that supports the following spec written in a {@link ICacheTech}.
+    * Gets an {@link IByteCache} that supports the following spec written in a {@link IBOCacheRMS}.
     * <br>
     * <br>
     * 
-    * @param tech {@link ICacheTech} 
+    * @param tech {@link IBOCacheRMS} 
     * @return
     */
    public IByteCache getCacheMorph(ByteObject tech);
@@ -100,7 +100,7 @@ public interface IByteCache extends IStringable {
     * <br>
     * <br>
     * 
-    * @return {@link ICacheTech} 
+    * @return {@link IBOCacheRMS} 
     */
    public ByteObject getCacheSpec();
 
@@ -243,7 +243,7 @@ public interface IByteCache extends IStringable {
     * Returns the byte at rid ignoring any caching business.
     * <br>
     * <br>
-    * Mainly used when {@link ICacheTech#CACHE_FLAG_2_REFERENCE} is set and byte array must be compared with the original.
+    * Mainly used when {@link IBOCacheRMS#CACHE_FLAG_2_REFERENCE} is set and byte array must be compared with the original.
     * <br>
     * <br>
     * Attention: there most is a discrepency between the cache

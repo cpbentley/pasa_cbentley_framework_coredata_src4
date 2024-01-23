@@ -12,7 +12,7 @@ import pasa.cbentley.core.src4.utils.BitUtils;
 import pasa.cbentley.framework.coredata.src4.ctx.CoreDataCtx;
 import pasa.cbentley.framework.coredata.src4.db.IByteCache;
 import pasa.cbentley.framework.coredata.src4.db.IByteStore;
-import pasa.cbentley.framework.coredata.src4.db.ICacheTech;
+import pasa.cbentley.framework.coredata.src4.db.IBOCacheRMS;
 import pasa.cbentley.framework.coredata.src4.interfaces.IRecordStore;
 
 /**
@@ -37,7 +37,7 @@ import pasa.cbentley.framework.coredata.src4.interfaces.IRecordStore;
  * The {@link IByteCache#manageCache(int, int)} allows the user to preload records from disk to memory.
  * <br>
  * <br>
- * The {@link IByteCache#getBytes(int)} may return reference or a copy {@link ICacheTech#CACHE_FLAG_2_REFERENCE}
+ * The {@link IByteCache#getBytes(int)} may return reference or a copy {@link IBOCacheRMS#CACHE_FLAG_2_REFERENCE}
  * <br>
  * Raw cache for byte arrays
  * <br>
@@ -53,7 +53,7 @@ import pasa.cbentley.framework.coredata.src4.interfaces.IRecordStore;
  * @author Mordan
  *
  */
-public class ByteCacheFrame implements IByteCache, ICacheTech {
+public class ByteCacheFrame implements IByteCache, IBOCacheRMS {
 
    /**
     * the actual caching of arrays.
@@ -123,7 +123,7 @@ public class ByteCacheFrame implements IByteCache, ICacheTech {
    private int          startFrameSize;
 
    /**
-    * {@link ICacheTech} tech parameters
+    * {@link IBOCacheRMS} tech parameters
     */
    private ByteObject   tech;
 
@@ -148,10 +148,10 @@ public class ByteCacheFrame implements IByteCache, ICacheTech {
       this.rmc = bs;
       this.tech = tech;
       recordStoreName = rsname;
-      startFrameSize = tech.get4(ICacheTech.CACHE_OFFSET_03_START_SIZE_4);
-      maxFrameSize = tech.get4(ICacheTech.CACHE_OFFSET_04_MAX_SIZE_4);
-      growAdditioner = tech.get2(ICacheTech.CACHE_OFFSET_02_GROW2);
-      rs = rmc.getIRMSCreator().openRecordStore(rsname, false);
+      startFrameSize = tech.get4(IBOCacheRMS.CACHE_OFFSET_03_START_SIZE_4);
+      maxFrameSize = tech.get4(IBOCacheRMS.CACHE_OFFSET_04_MAX_SIZE_4);
+      growAdditioner = tech.get2(IBOCacheRMS.CACHE_OFFSET_02_GROW2);
+      rs = rmc.getByteRecordStoreFactory().openRecordStore(rsname, false);
       reset();
       initCache(0);
    }

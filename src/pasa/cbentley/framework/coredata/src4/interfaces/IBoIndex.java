@@ -15,7 +15,7 @@ import pasa.cbentley.core.src4.logging.IStringable;
  * <li> a Date
  * <br>
  * <br>
- * The index further normalize based on the root reference defined in the index byte header {@link ITechBoIndex#INDEX_OFFSET_05_REFERENCE_KEY4}
+ * The index further normalize based on the root reference defined in the index byte header {@link IBOIndex#INDEX_OFFSET_05_REFERENCE_KEY4}
  * 
  * <br>
  * <br>
@@ -146,7 +146,7 @@ public interface IBoIndex extends IStringable {
     * Returns the {@link ByteObject} describing the technical options of the Index.
     * <br>
     * <br>
-    * {@link ITechBoIndex} specifies.
+    * {@link IBOIndex} specifies.
     * <br>
     * <br>
     * 

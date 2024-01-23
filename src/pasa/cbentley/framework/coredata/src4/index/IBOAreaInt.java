@@ -20,7 +20,7 @@ import pasa.cbentley.framework.coredata.src4.ctx.IBOTypesCoreData;
  * @author Charles-Philip Bentley
  *
  */
-public interface ITechAreaInt extends IByteObject {
+public interface IBOAreaInt extends IByteObject {
 
    public static final int FLAG_DISPLAY_1_HEADER                 = 1;
 
@@ -46,7 +46,7 @@ public interface ITechAreaInt extends IByteObject {
    public static final int LINE_FLAG_1_TWO_BYTES                 = 1;
 
    /**
-    * When {@link ITechAreaInt#LINE_FLAG_1_TWO_BYTES} is set to 0
+    * When {@link IBOAreaInt#LINE_FLAG_1_TWO_BYTES} is set to 0
     * <li>0 => three bytes
     * <li>set 4 bytes
     */
@@ -96,7 +96,7 @@ public interface ITechAreaInt extends IByteObject {
     * Otherwise each line decides itself.
     * <br>
     * <br>
-    * When used in an Index, linked to {@link ITechBoIndex#INDEX_OFFSET_03_VALUE_BYTESIZE1}
+    * When used in an Index, linked to {@link IBOIndex#INDEX_OFFSET_03_VALUE_BYTESIZE1}
     */
    public static final int MAIN_OFFSET_02_DATA_BYTE_SIZE1        = A_OBJECT_BASIC_SIZE + 1;
 
@@ -109,7 +109,7 @@ public interface ITechAreaInt extends IByteObject {
     * The number of areas per lines. 1-based index
     * <br>
     * <br>
-    * When used in an Index, linked to {@link ITechBoIndex#INDEX_OFFSET_08_NUM_AREAS2}
+    * When used in an Index, linked to {@link IBOIndex#INDEX_OFFSET_08_NUM_AREAS2}
     */
    public static final int MAIN_OFFSET_04_NUM_AREAS2             = A_OBJECT_BASIC_SIZE + 3;
 
@@ -117,7 +117,7 @@ public interface ITechAreaInt extends IByteObject {
     * Bytesize of offsets to patched areas in the line table of offsets.
     * <br>
     * <br>
-    * Thus this value is only used when {@link ITechAreaInt#MAIN_OFFSET_06_NUM_DATA_PER_AREAS2} is 0.
+    * Thus this value is only used when {@link IBOAreaInt#MAIN_OFFSET_06_NUM_DATA_PER_AREAS2} is 0.
     * When first created, a base value of 1 or 2 is recommended. Decoder will increase to 3 or 4 when needed.
     * <br>
     * <li> 1 means only up to 255 offset value
@@ -135,9 +135,9 @@ public interface ITechAreaInt extends IByteObject {
     * <br>
     * 1 or more X means area offsets can be computed since all areas have the exact same number of bytes.
     * 
-    * <li> {@link ITechAreaInt#DATA_0_LINE_OFFSET_TABLE}
-    * <li> {@link ITechAreaInt#DATA_1_PER_AREA}
-    * <li> {@link ITechAreaInt#DATA_2_PER_AREA}
+    * <li> {@link IBOAreaInt#DATA_0_LINE_OFFSET_TABLE}
+    * <li> {@link IBOAreaInt#DATA_1_PER_AREA}
+    * <li> {@link IBOAreaInt#DATA_2_PER_AREA}
     */
    public static final int MAIN_OFFSET_06_NUM_DATA_PER_AREAS2    = A_OBJECT_BASIC_SIZE + 6;
 
@@ -147,7 +147,7 @@ public interface ITechAreaInt extends IByteObject {
    public static final int DATA_0_LINE_OFFSET_TABLE              = 0;
 
    /**
-    * Each area has 1 data of {@link ITechAreaInt#MAIN_OFFSET_05_BYTE_SIZE_AREA_OFFSET1} number of bytes
+    * Each area has 1 data of {@link IBOAreaInt#MAIN_OFFSET_05_BYTE_SIZE_AREA_OFFSET1} number of bytes
     */
    public static final int DATA_1_PER_AREA                       = 1;
 

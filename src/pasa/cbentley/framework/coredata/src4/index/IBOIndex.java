@@ -9,7 +9,7 @@ import pasa.cbentley.framework.coredata.src4.db.IDataImportExport;
  * @author Charles-Philip Bentley
  *
  */
-public interface ITechBoIndex extends IByteObject {
+public interface IBOIndex extends IByteObject {
 
    public static final int INDEX_BASIC_SIZE                = A_OBJECT_BASIC_SIZE + 20;
 
@@ -77,8 +77,8 @@ public interface ITechBoIndex extends IByteObject {
 
    /**
     * Type of Index
-    * <li> {@link ITechBoIndex#TYPE_0_PATCH}
-    * <li> {@link ITechBoIndex#TYPE_1_CHAIN}
+    * <li> {@link IBOIndex#TYPE_0_PATCH}
+    * <li> {@link IBOIndex#TYPE_1_CHAIN}
     * 
     */
    public static final int INDEX_OFFSET_02_TYPE1           = A_OBJECT_BASIC_SIZE + 1;
@@ -151,9 +151,9 @@ public interface ITechBoIndex extends IByteObject {
 
    /**
     * What should be done when the value byte size is bigger than currently encoded?
-    * <li>{@link ITechBoIndex#OVER_SIZE_0_EXPAND}
-    * <li>{@link ITechBoIndex#OVER_SIZE_1_EXCEPTION}
-    * <li>{@link ITechBoIndex#OVER_SIZE_2_TRUNCATE}
+    * <li>{@link IBOIndex#OVER_SIZE_0_EXPAND}
+    * <li>{@link IBOIndex#OVER_SIZE_1_EXCEPTION}
+    * <li>{@link IBOIndex#OVER_SIZE_2_TRUNCATE}
     * 
     */
    public static final int INDEX_OFFSET_09_OVER_SIZE_TYPE1 = A_OBJECT_BASIC_SIZE + 16;

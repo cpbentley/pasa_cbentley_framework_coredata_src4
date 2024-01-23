@@ -32,7 +32,7 @@ import pasa.cbentley.framework.coredata.src4.db.IByteInterpreter;
  * [13] [1-3] [24-1 27] [45 47-2] 
  * <br>
  * <br>
- * The value stored are 1 2-3 or 4 bytes : {@link ITechAreaInt#MAIN_OFFSET_02_DATA_BYTE_SIZE1}
+ * The value stored are 1 2-3 or 4 bytes : {@link IBOAreaInt#MAIN_OFFSET_02_DATA_BYTE_SIZE1}
  * <br>
  * <br>
  * 
@@ -67,7 +67,7 @@ import pasa.cbentley.framework.coredata.src4.db.IByteInterpreter;
  * @author cbentley
  *
  */
-public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
+public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
 
    /**
     * 
@@ -125,7 +125,7 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
    private int                 numAreas      = 1;
 
    /**
-    * {@link ITechAreaInt#MAIN_OFFSET_06_NUM_DATA_PER_AREAS2}
+    * {@link IBOAreaInt#MAIN_OFFSET_06_NUM_DATA_PER_AREAS2}
     */
    private int                 numDatas      = 0;
 
@@ -195,23 +195,23 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
             //one was added, shift the diff in all area end offset above the current factor
             for (int i = area; i < numAreas; i++) {
                int areaOffset = getLineAreaEndOffset(offset, i);
-               ByteObjectStatic.increment(bytes, areaOffset, byteSizeAreaOffsets, diff);
+               ByteArrayStaticUtilz.increment(bytes, areaOffset, byteSizeAreaOffsets, diff);
             }
          }
          return bytes;
       } else {
          int offsetStart = getAreaStartOffsetNum(bytes, offset, area);
          if (numDatas == 1) {
-            ByteObjectStatic.setValue(bytes, offsetStart, value, dataByteSize);
+            ByteArrayStaticUtilz.setValue(bytes, offsetStart, value, dataByteSize);
          } else {
             //shift and then writes
             int endOffset = getAreaEndOffsetNum(bytes, offset, area) - dataByteSize;
             for (int i = numDatas - 1; i > 0; i--) {
                endOffset -= dataByteSize;
-               int val = ByteObjectStatic.getValue(bytes, endOffset, dataByteSize);
-               ByteObjectStatic.setValue(bytes, endOffset + dataByteSize, val, dataByteSize);
+               int val = ByteArrayStaticUtilz.getValue(bytes, endOffset, dataByteSize);
+               ByteArrayStaticUtilz.setValue(bytes, endOffset + dataByteSize, val, dataByteSize);
             }
-            ByteObjectStatic.setValue(bytes, offsetStart, value, dataByteSize);
+            ByteArrayStaticUtilz.setValue(bytes, offsetStart, value, dataByteSize);
          }
          return bytes;
       }
@@ -250,7 +250,7 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
       while (i >= areaStartOffset) {
          //
          int header = bytes[i];
-         int patchValue = ByteObjectStatic.getValue(bytes, i + 1, dataByteSize);
+         int patchValue = ByteArrayStaticUtilz.getValue(bytes, i + 1, dataByteSize);
          int intFrameStart = patchValue;
          int intFrameEnd = patchValue + header - 1;
          if (value < intFrameStart - 1) {
@@ -323,7 +323,7 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
       bytes = cdc.getUCtx().getMem().increaseCapacity(bytes, patchByteSize, offset);
       //header
       bytes[offset] = 1;
-      ByteObjectStatic.setValue(bytes, offset + 1, rid, dataByteSize);
+      ByteArrayStaticUtilz.setValue(bytes, offset + 1, rid, dataByteSize);
       return bytes;
    }
 
@@ -365,14 +365,14 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
             //copy
             int areaOffsets = getLineAreaEndOffset(offset, upAreas);
             //decrement 
-            ByteObjectStatic.increment(newData, areaOffsets, byteSizeAreaOffsets, -areaByteLen);
+            ByteArrayStaticUtilz.increment(newData, areaOffsets, byteSizeAreaOffsets, -areaByteLen);
          }
 
          return newData;
       } else {
          int readOffset = getAreaStartOffsetNum(data, offset, area);
          for (int i = 0; i < numDatas; i++) {
-            ByteObjectStatic.setValue(data, readOffset, 0, dataByteSize);
+            ByteArrayStaticUtilz.setValue(data, readOffset, 0, dataByteSize);
             readOffset += dataByteSize;
          }
          return data;
@@ -389,7 +389,7 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
          //empty areas. all start at the same offset
          int offset = lineHeaderByteSize;
          for (int i = 0; i < numAreas; i++) {
-            ByteObjectStatic.setValue(bytes, offset, value, byteSizeAreaOffsets);
+            ByteArrayStaticUtilz.setValue(bytes, offset, value, byteSizeAreaOffsets);
             offset += byteSizeAreaOffsets;
          }
          return bytes;
@@ -435,7 +435,7 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
       tableOffset += lineHeaderByteSize;
       tableOffset += (area * byteSizeAreaOffsets);
       // -2 because f==1 is ignored and we start reading at _firstHeaderSize for f=2
-      return offset + ByteObjectStatic.getValue(b, tableOffset, byteSizeAreaOffsets);
+      return offset + ByteArrayStaticUtilz.getValue(b, tableOffset, byteSizeAreaOffsets);
    }
 
    public int getAreaStartOffset(byte[] b, int offset, int area) {
@@ -537,7 +537,7 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
          int start = getAreaStartOffsetPatch(ar, offset, area);
          for (int i = start; i < len; i = i + patchByteSize) {
             int head = ar[i];
-            int val = ByteObjectStatic.getValue(ar, i + 1, dataByteSize);
+            int val = ByteArrayStaticUtilz.getValue(ar, i + 1, dataByteSize);
             if (value >= val && value <= val + head) {
                return true;
             }
@@ -545,7 +545,7 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
       } else {
          int readOffset = getAreaStartOffsetNum(ar, offset, area);
          for (int i = 0; i < numDatas; i++) {
-            int val = ByteObjectStatic.getValue(ar, readOffset, dataByteSize);
+            int val = ByteArrayStaticUtilz.getValue(ar, readOffset, dataByteSize);
             if (val == value) {
                return true;
             }
@@ -596,7 +596,7 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
             int count = 0;
             for (int i = start; i < endOffset; i = i + patchByteSize) {
                int patchHeader = data[i];
-               int val = ByteObjectStatic.getValue(data, i + 1, dataByteSize);
+               int val = ByteArrayStaticUtilz.getValue(data, i + 1, dataByteSize);
                for (int j = 0; j < patchHeader; j++) {
                   ar[count] = val + j;
                   count++;
@@ -608,7 +608,7 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
          int[] ar = new int[numDatas];
          int readOffset = getAreaStartOffsetNum(data, offset, area);
          for (int i = 0; i < numDatas; i++) {
-            ar[i] = ByteObjectStatic.getValue(data, readOffset, dataByteSize);
+            ar[i] = ByteArrayStaticUtilz.getValue(data, readOffset, dataByteSize);
             readOffset += dataByteSize;
          }
          return ar;
@@ -666,7 +666,7 @@ public class IntAreaDecoder implements IByteInteger, ITechAreaInt {
       dc.append(" numDatas=" + numDatas);
       dc.nl();
       for (int i = 0; i < numAreas; i++) {
-         dc.append(ByteObjectStatic.getValue(data, getLineAreaEndOffset(offset, i), byteSizeAreaOffsets));
+         dc.append(ByteArrayStaticUtilz.getValue(data, getLineAreaEndOffset(offset, i), byteSizeAreaOffsets));
          dc.append(", ");
       }
       dc.nl();

@@ -4,7 +4,7 @@ import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.utils.IntUtils;
 import pasa.cbentley.core.src4.utils.ShortUtils;
 
-public class ByteObjectStatic {
+public class ByteArrayStaticUtilz {
 
    public static void increment(byte[] data, int index, int size, int incr) {
       int val = getValue(data, index, size);

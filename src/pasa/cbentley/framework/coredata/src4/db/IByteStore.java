@@ -163,7 +163,7 @@ public interface IByteStore extends IStringable {
     * <br>
     * 
     * @param rs store name. unique id.
-    * @param tech config parameters specifying the kind of cache implementation {@link ICacheTech}
+    * @param tech config parameters specifying the kind of cache implementation {@link IBOCacheRMS}
     * @return
     */
    public IByteCache getByteCache(String rs, ByteObject tech);

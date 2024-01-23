@@ -4,7 +4,7 @@ import pasa.cbentley.byteobjects.src4.core.BOModuleAbstract;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDebugStringable;
-import pasa.cbentley.framework.coredata.src4.index.ITechBoIndex;
+import pasa.cbentley.framework.coredata.src4.index.IBOIndex;
 
 /**
  * Managed all the Types of this Business Model module.
@@ -98,7 +98,7 @@ public class BOModuleCoreData extends BOModuleAbstract implements IDebugStringab
       switch (type) {
          case TYPE_202_INDEX:
             switch (offset) {
-               case ITechBoIndex.INDEX_OFFSET_03_VALUE_BYTESIZE1:
+               case IBOIndex.INDEX_OFFSET_03_VALUE_BYTESIZE1:
                   return "ValueByteSize";
                default:
                   return null;

@@ -16,7 +16,7 @@ import pasa.cbentley.framework.coredata.src4.db.IByteCache;
 import pasa.cbentley.framework.coredata.src4.db.IByteInterpreter;
 import pasa.cbentley.framework.coredata.src4.db.IByteRecordStoreFactory;
 import pasa.cbentley.framework.coredata.src4.db.IByteStore;
-import pasa.cbentley.framework.coredata.src4.db.ICacheTech;
+import pasa.cbentley.framework.coredata.src4.db.IBOCacheRMS;
 import pasa.cbentley.framework.coredata.src4.ex.StoreException;
 import pasa.cbentley.framework.coredata.src4.ex.StoreInvalidIDException;
 import pasa.cbentley.framework.coredata.src4.ex.StoreNotFoundException;
@@ -264,7 +264,7 @@ public class RMSByteStore implements IByteStore, IStringable {
       if (cacheParam == null) {
          return new ByteCacheDummy(rmc, this, rs);
       } else {
-         int type = cacheParam.get1(ICacheTech.CACHE_OFFSET_06_TYPE1);
+         int type = cacheParam.get1(IBOCacheRMS.CACHE_OFFSET_06_TYPE1);
          return new ByteCacheFrame(rmc, rs, cacheParam);
       }
    }

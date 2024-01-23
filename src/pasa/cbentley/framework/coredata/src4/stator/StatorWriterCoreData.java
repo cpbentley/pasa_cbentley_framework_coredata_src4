@@ -1,64 +1,54 @@
-package pasa.cbentley.framework.coredata.src4.engine;
+package pasa.cbentley.framework.coredata.src4.stator;
 
-import pasa.cbentley.byteobjects.src4.stator.ITechStateBO;
+import pasa.cbentley.byteobjects.src4.core.ByteObject;
+import pasa.cbentley.byteobjects.src4.stator.ITechStatorBO;
+import pasa.cbentley.byteobjects.src4.stator.StatorBO;
 import pasa.cbentley.byteobjects.src4.stator.StatorWriterBO;
 import pasa.cbentley.core.src4.ctx.CtxManager;
-import pasa.cbentley.core.src4.ctx.UCtx;
-import pasa.cbentley.core.src4.io.BAByteIS;
 import pasa.cbentley.core.src4.io.BAByteOS;
-import pasa.cbentley.core.src4.io.BADataIS;
 import pasa.cbentley.core.src4.io.BADataOS;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.core.src4.logging.IDLog;
-import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.framework.coredata.src4.ctx.CoreDataCtx;
 import pasa.cbentley.framework.coredata.src4.db.IByteRecordStoreFactory;
 import pasa.cbentley.framework.coredata.src4.ex.StoreException;
-import pasa.cbentley.framework.coredata.src4.ex.StoreInvalidIDException;
 import pasa.cbentley.framework.coredata.src4.ex.StoreNotFoundException;
-import pasa.cbentley.framework.coredata.src4.ex.StoreNotOpenException;
 import pasa.cbentley.framework.coredata.src4.interfaces.IRecordStore;
 
+/**
+ * Implements the {@link ByteObject} key mechanism for the Framework.
+ * <p>
+ * We want to disociate Ctx state from View and from Model so we can combine them as we want.
+ * 
+ * We do not want a monolith state file
+ * </p>
+ * 
+ * Compared to {@link StatorWriterBO}, we have access to {@link CoreDataCtx} for actually writing to disk.
+ * 
+ * 
+ * @author Charles Bentley
+ *
+ */
 public class StatorWriterCoreData extends StatorWriterBO {
 
    protected final CoreDataCtx  cdc;
 
    private String               storeName;
 
-   private StatorWriterCoreData readerContext;
 
-   private StatorWriterCoreData readerView;
-
-   private StatorWriterCoreData writerModel;
-
-   public StatorWriterCoreData(CoreDataCtx cdc, String storeName) {
-      super(cdc.getBOC());
-      this.storeName = storeName;
-      this.cdc = cdc;
-
+   public StatorWriterCoreData(CoreDataCtx cdc, StatorBO stator, int type, String storeName) {
+      this(cdc, stator, type, storeName, null);
    }
 
-   public StatorWriterCoreData(CoreDataCtx cdc, String storeName, StatorWriterCoreData parent) {
-      super(cdc.getBOC());
+   public StatorWriterCoreData(CoreDataCtx cdc, StatorBO stator, int type, String storeName, StatorWriterCoreData parent) {
+      super(stator, type);
       this.storeName = storeName;
       this.cdc = cdc;
       this.parent = parent;
+
+      //#debug
+      toDLog().pInit("Created", this, StatorWriterCoreData.class, "StatorWriterCoreData", LVL_05_FINE, true);
    }
 
-   public StatorWriterBO getStateWriter(int type) {
-      if (type == ITechStateBO.TYPE_3_CTX) {
-         if (readerContext == null) {
-            readerContext = new StatorWriterCoreData(cdc, storeName, this);
-         }
-         return readerContext;
-      } else if (type == TYPE_1_VIEW) {
-         if (readerView == null) {
-            readerView = new StatorWriterCoreData(cdc, storeName, this);
-         }
-         return readerView;
-      }
-      return this;
-   }
 
    public void serializeToStore() {
       IByteRecordStoreFactory fac = cdc.getByteRecordStoreFactory();
@@ -66,18 +56,6 @@ public class StatorWriterCoreData extends StatorWriterBO {
       int base = rs.getBase();
       byte[] dataMain = serialize();
       cdc.getByteStore().setBytesEnsure(storeName, base, dataMain);
-      if (readerContext != null) {
-         byte[] data = readerContext.getDataWriter().getByteCopy();
-         cdc.getByteStore().setBytesEnsure(storeName, base + ITechStateBO.TYPE_3_CTX, data);
-      }
-      if (readerView != null) {
-         byte[] data = readerView.getDataWriter().getByteCopy();
-         cdc.getByteStore().setBytesEnsure(storeName, base + ITechStateBO.TYPE_1_VIEW, data);
-      }
-      if (writerModel != null) {
-         byte[] data = writerModel.getDataWriter().getByteCopy();
-         cdc.getByteStore().setBytesEnsure(storeName, base + ITechStateBO.TYPE_2_MODEL, data);
-      }
    }
 
    private byte[] getModuleBytes(CtxManager ob) {
@@ -119,21 +97,11 @@ public class StatorWriterCoreData extends StatorWriterBO {
    }
 
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
    public void toString(Dctx dc) {
-      dc.root(this, "ConfigManager");
+      dc.root(this, StatorWriterCoreData.class, 140);
       toStringPrivate(dc);
-   }
+      super.toString(dc.sup());
 
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
    }
 
    private void toStringPrivate(Dctx dc) {
@@ -141,12 +109,9 @@ public class StatorWriterCoreData extends StatorWriterBO {
    }
 
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "ConfigManager");
+      dc.root1Line(this, StatorWriterCoreData.class);
       toStringPrivate(dc);
-   }
-
-   public UCtx toStringGetUCtx() {
-      return uc;
+      super.toString1Line(dc.sup1Line());
    }
 
    //#enddebug

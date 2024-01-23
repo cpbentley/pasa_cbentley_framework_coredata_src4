@@ -4,14 +4,16 @@ import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.byteobjects.src4.ctx.ABOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.BOCtx;
 import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
+import pasa.cbentley.byteobjects.src4.ctx.IStaticIDsBO;
 import pasa.cbentley.byteobjects.src4.ctx.IToStringFlagsBO;
 import pasa.cbentley.core.src4.ctx.ACtx;
+import pasa.cbentley.core.src4.ctx.CtxManager;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.utils.DateUtils;
 import pasa.cbentley.framework.coredata.src4.db.IByteRecordStoreFactory;
 import pasa.cbentley.framework.coredata.src4.db.IByteStore;
-import pasa.cbentley.framework.coredata.src4.db.ICacheTech;
+import pasa.cbentley.framework.coredata.src4.db.IBOCacheRMS;
 import pasa.cbentley.framework.coredata.src4.engine.RMSByteStore;
 import pasa.cbentley.framework.coredata.src4.index.IndexFactory;
 import pasa.cbentley.framework.coredata.src4.index.IndexOperator;
@@ -36,8 +38,16 @@ public abstract class CoreDataCtx extends ABOCtx {
 
    public CoreDataCtx(IConfigCoreData config, BOCtx boc) {
       super(config, boc);
+
+      CtxManager cm = uc.getCtxManager();
+      cm.registerStaticRange(this, IStaticIDsBO.SID_BYTEOBJECT_TYPES, IBOTypesCoreData.SID_BASETYPE_A, IBOTypesCoreData.SID_BASETYPE_Z);
    }
 
+   /**
+    * Host implementation of {@link CoreDataCtx} returns the {@link IByteRecordStoreFactory}.
+    * 
+    * @return
+    */
    public abstract IByteRecordStoreFactory getByteRecordStoreFactory();
 
    public IByteStore getByteStore() {
@@ -50,16 +60,16 @@ public abstract class CoreDataCtx extends ABOCtx {
    public int getBOCtxSettingSize() {
       return 0;
    }
-   
+
    protected void applySettings(ByteObject settingsNew, ByteObject settingsOld) {
 
    }
 
    public ByteObject getDefaultTech() {
-      ByteObject bo = new ByteObject(boc, IBOTypesBOC.TYPE_020_PARAMATERS, ICacheTech.CACHE_BASIC_SIZE);
-      bo.setValue(ICacheTech.CACHE_OFFSET_02_GROW2, 5, 2);
-      bo.setValue(ICacheTech.CACHE_OFFSET_03_START_SIZE_4, 5, 2);
-      bo.setValue(ICacheTech.CACHE_OFFSET_04_MAX_SIZE_4, 60, 4);
+      ByteObject bo = new ByteObject(boc, IBOTypesBOC.TYPE_020_PARAMATERS, IBOCacheRMS.CACHE_BASIC_SIZE);
+      bo.setValue(IBOCacheRMS.CACHE_OFFSET_02_GROW2, 5, 2);
+      bo.setValue(IBOCacheRMS.CACHE_OFFSET_03_START_SIZE_4, 5, 2);
+      bo.setValue(IBOCacheRMS.CACHE_OFFSET_04_MAX_SIZE_4, 60, 4);
 
       return bo;
    }
@@ -78,15 +88,11 @@ public abstract class CoreDataCtx extends ABOCtx {
       return indexOperator;
    }
 
-   public IByteRecordStoreFactory getIRMSCreator() {
-      return null;
-   }
-
    public ByteObject getTech(int maxsize, int startsize, int growadd) {
       ByteObject bo = getDefaultTech();
-      bo.set2(ICacheTech.CACHE_OFFSET_02_GROW2, growadd);
-      bo.set4(ICacheTech.CACHE_OFFSET_03_START_SIZE_4, startsize);
-      bo.set4(ICacheTech.CACHE_OFFSET_04_MAX_SIZE_4, maxsize);
+      bo.set2(IBOCacheRMS.CACHE_OFFSET_02_GROW2, growadd);
+      bo.set4(IBOCacheRMS.CACHE_OFFSET_03_START_SIZE_4, startsize);
+      bo.set4(IBOCacheRMS.CACHE_OFFSET_04_MAX_SIZE_4, maxsize);
 
       return bo;
    }
@@ -131,9 +137,12 @@ public abstract class CoreDataCtx extends ABOCtx {
 
    //#mdebug
    public void toString(Dctx dc) {
-      dc.root(this, CoreDataCtx.class);
+      dc.root(this, CoreDataCtx.class, "@line5");
       toStringPrivate(dc);
       super.toString(dc.sup());
+      dc.nlLvl(byteStore, "byteStore");
+      dc.nlLvl(indexFactory, "indexFactory");
+      dc.nlLvl(indexOperator, "indexOperator");
    }
 
    private void toStringPrivate(Dctx dc) {
@@ -141,7 +150,7 @@ public abstract class CoreDataCtx extends ABOCtx {
    }
 
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "CoreDataCtx");
+      dc.root1Line(this, CoreDataCtx.class);
       toStringPrivate(dc);
       super.toString1Line(dc.sup1Line());
    }

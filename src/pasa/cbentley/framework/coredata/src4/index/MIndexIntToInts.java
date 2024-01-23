@@ -16,7 +16,7 @@ import pasa.cbentley.core.src4.utils.IntUtils;
 import pasa.cbentley.framework.coredata.src4.ctx.CoreDataCtx;
 import pasa.cbentley.framework.coredata.src4.db.IByteCache;
 import pasa.cbentley.framework.coredata.src4.db.IByteStore;
-import pasa.cbentley.framework.coredata.src4.db.ICacheTech;
+import pasa.cbentley.framework.coredata.src4.db.IBOCacheRMS;
 import pasa.cbentley.framework.coredata.src4.db.IDataImportExport;
 import pasa.cbentley.framework.coredata.src4.interfaces.IBoIndex;
 
@@ -36,7 +36,7 @@ import pasa.cbentley.framework.coredata.src4.interfaces.IBoIndex;
  * <br>
  * <br>
  * 
- * To create an {@link MIndexIntToInts}, you will need the index handle and a tech param header defined by {@link ITechBoIndex}.
+ * To create an {@link MIndexIntToInts}, you will need the index handle and a tech param header defined by {@link IBOIndex}.
  * <br>
  * <br>
  * 
@@ -60,7 +60,7 @@ import pasa.cbentley.framework.coredata.src4.interfaces.IBoIndex;
  * @author Charles-Philip Bentley
  *
  */
-public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExport {
+public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
 
    public static final int MINUS_SIGN_16BITS_FLAG = 32768;
 
@@ -79,7 +79,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
    }
 
    /**
-    * {@link ITechBoIndex#INDEX_OFFSET_08_NUM_AREAS2}
+    * {@link IBOIndex#INDEX_OFFSET_08_NUM_AREAS2}
     */
    protected int               areaNumber;
 
@@ -119,7 +119,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
    protected final CoreDataCtx cdc;
 
    /**
-    * Cache holder for {@link ITechBoIndex#INDEX_OFFSET_04_AUX_BYTESIZE1}, the number of bytes needed to code the chain pointer.
+    * Cache holder for {@link IBOIndex#INDEX_OFFSET_04_AUX_BYTESIZE1}, the number of bytes needed to code the chain pointer.
     * <br>
     * <br>
     * When chain byte size has to be increased. it takes a very long time.
@@ -201,10 +201,10 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
     * Stores 
     * <br>
     * static data
-    * <li> {@link ITechBoIndex#INDEX_OFFSET_02_TYPE1} dynamic data. Chain index or pack.
-    * <li> {@link ITechBoIndex#INDEX_OFFSET_03_VALUE_BYTESIZE1}
-    * <li> {@link ITechBoIndex#INDEX_OFFSET_05_REFERENCE_KEY4}
-    * <li> {@link ITechBoIndex#INDEX_OFFSET_08_NUM_AREAS2}
+    * <li> {@link IBOIndex#INDEX_OFFSET_02_TYPE1} dynamic data. Chain index or pack.
+    * <li> {@link IBOIndex#INDEX_OFFSET_03_VALUE_BYTESIZE1}
+    * <li> {@link IBOIndex#INDEX_OFFSET_05_REFERENCE_KEY4}
+    * <li> {@link IBOIndex#INDEX_OFFSET_08_NUM_AREAS2}
     * <li> ...
     * <br>
     * <br>
@@ -244,7 +244,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
    protected int               keyMinUser;
 
    /**
-    * Value in user referential i.e. not normalized. Stored at {@link ITechBoIndex#INDEX_OFFSET_05_REFERENCE_KEY4}
+    * Value in user referential i.e. not normalized. Stored at {@link IBOIndex#INDEX_OFFSET_05_REFERENCE_KEY4}
     * <br>
     * <br>
     * When not set by user configuration, the default is {@link IByteStore#getBase()} + 1 to match the default
@@ -282,7 +282,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
 
    /**
     * True when chains use patches
-    * {@link ITechBoIndex#INDEX_FLAG_5_CHAIN_PATCH}
+    * {@link IBOIndex#INDEX_FLAG_5_CHAIN_PATCH}
     */
    boolean                     useChainPatch         = false;
 
@@ -322,7 +322,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
     * Takes a copy of the {@link ByteObject} tech.
     * @param byteStore
     * @param tech
-    * @param cacheTech {@link ICacheTech}
+    * @param cacheTech {@link IBOCacheRMS}
     */
    public MIndexIntToInts(CoreDataCtx cdc, String byteStore, ByteObject tech) {
       this.cdc = cdc;
@@ -352,16 +352,16 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
          int totalByteSize = valueByteSize + chainByteSize;
          int chainDataIndex = (area * totalByteSize) + valueByteSize;
          int valueDataIndex = area * totalByteSize;
-         int headChainPointer = ByteObjectStatic.getValue(d, chainDataIndex, chainByteSize);
+         int headChainPointer = ByteArrayStaticUtilz.getValue(d, chainDataIndex, chainByteSize);
          //all heads boostraps will first branch here.
          if (headChainPointer == chainNull) {
             if (useChainPatch) {
-               ByteObjectStatic.setValue(d, valueDataIndex, 1, 1);
-               ByteObjectStatic.setValue(d, valueDataIndex + 1, bid, valueByteSize - 1);
+               ByteArrayStaticUtilz.setValue(d, valueDataIndex, 1, 1);
+               ByteArrayStaticUtilz.setValue(d, valueDataIndex + 1, bid, valueByteSize - 1);
             } else {
-               ByteObjectStatic.setValue(d, valueDataIndex, bid, valueByteSize);
+               ByteArrayStaticUtilz.setValue(d, valueDataIndex, bid, valueByteSize);
             }
-            ByteObjectStatic.setValue(d, chainDataIndex, chainEmpty, chainByteSize);
+            ByteArrayStaticUtilz.setValue(d, chainDataIndex, chainEmpty, chainByteSize);
             //head is modified so save it
             byteCache.setBytes(krid, d);
          } else {
@@ -401,19 +401,19 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
       int valueDataIndex = area * totalByteSize;
 
       //head = add and shift all values down by simply creating a new entry 
-      int headChainValue = ByteObjectStatic.getValue(headData, valueDataIndex, valueByteSize);
-      int headChainPointer = ByteObjectStatic.getValue(headData, chainDataIndex, chainByteSize);
+      int headChainValue = ByteArrayStaticUtilz.getValue(headData, valueDataIndex, valueByteSize);
+      int headChainPointer = ByteArrayStaticUtilz.getValue(headData, chainDataIndex, chainByteSize);
 
       //copy it new chain maillon.
       byte[] data = new byte[valueByteSize + chainByteSize];
       //so bring old head to new maillon
-      ByteObjectStatic.setValue(data, 0, headChainValue, valueByteSize);
-      ByteObjectStatic.setValue(data, valueByteSize, headChainPointer, chainByteSize);
+      ByteArrayStaticUtilz.setValue(data, 0, headChainValue, valueByteSize);
+      ByteArrayStaticUtilz.setValue(data, valueByteSize, headChainPointer, chainByteSize);
       //add it to chain byte store
       int rid = byteCacheChained.addBytes(data);
       //the rid is the new chain pointer. no areas in this case
-      ByteObjectStatic.setValue(headData, valueDataIndex, bid, valueByteSize);
-      ByteObjectStatic.setValue(headData, chainDataIndex, rid, chainByteSize);
+      ByteArrayStaticUtilz.setValue(headData, valueDataIndex, bid, valueByteSize);
+      ByteArrayStaticUtilz.setValue(headData, chainDataIndex, rid, chainByteSize);
 
       byteCache.setBytes(krid, headData);
    }
@@ -435,7 +435,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
       int valueDataIndex = area * totalByteSize;
       int chainDataIndex = (area * totalByteSize) + valueByteSize;
       //not null by contract
-      int chainData = ByteObjectStatic.getValue(head, chainDataIndex, chainByteSize);
+      int chainData = ByteArrayStaticUtilz.getValue(head, chainDataIndex, chainByteSize);
       //tail = add at the end.. follow the chain and add a new one
       byte[] keyData = head;
       int chainDataPrevious = -1;
@@ -446,10 +446,10 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
             //add here. new key depends on areas.
             //create new
             byte[] data = new byte[valueByteSize + chainByteSize];
-            ByteObjectStatic.setValue(data, 0, bid, valueByteSize);
-            ByteObjectStatic.setValue(data, valueByteSize, chainEmpty, chainByteSize);
+            ByteArrayStaticUtilz.setValue(data, 0, bid, valueByteSize);
+            ByteArrayStaticUtilz.setValue(data, valueByteSize, chainEmpty, chainByteSize);
             int rid = byteCacheChained.addBytes(data);
-            ByteObjectStatic.setValue(keyData, chainDataIndex, rid, chainByteSize);
+            ByteArrayStaticUtilz.setValue(keyData, chainDataIndex, rid, chainByteSize);
             if (keyData == head) {
                byteCache.setBytes(krid, keyData);
             } else {
@@ -467,7 +467,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
             chainDataPrevious = chainData;
             keyData = getKeyChainedData(chainData);
             //read the new chain data
-            chainData = ByteObjectStatic.getValue(keyData, chainDataIndex, chainByteSize);
+            chainData = ByteArrayStaticUtilz.getValue(keyData, chainDataIndex, chainByteSize);
          }
          count++;
       }
@@ -494,7 +494,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
     * <br>
     * @param key user key not normalized
     * @param rid
-    * @throws IllegalArgumentException when {@link ITechBoIndex#INDEX_OFFSET_07_KEY_REJECT_2} rejects key
+    * @throws IllegalArgumentException when {@link IBOIndex#INDEX_OFFSET_07_KEY_REJECT_2} rejects key
     */
    public void addBidToKey(int key, int bid) {
       if (key < keyReference) {
@@ -548,7 +548,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
       int chainDataIndex = valueByteSize;
       addToBufferChain(ib, keyData, valueIndex);
       //the pointer that include key/area
-      chainData = ByteObjectStatic.getValue(keyData, chainDataIndex, chainByteSize);
+      chainData = ByteArrayStaticUtilz.getValue(keyData, chainDataIndex, chainByteSize);
       return chainData;
    }
 
@@ -563,7 +563,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
       int totalByteSize = valueByteSize + chainByteSize;
       int valueIndex = area * totalByteSize;
       int chainDataIndex = valueIndex + valueByteSize;
-      int chainData = ByteObjectStatic.getValue(keyData, chainDataIndex, chainByteSize);
+      int chainData = ByteArrayStaticUtilz.getValue(keyData, chainDataIndex, chainByteSize);
       if (chainData == chainNull) {
          return chainEmpty;
       } else {
@@ -608,14 +608,14 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
    protected void addToBufferChain(IntBuffer ib, byte[] keyData, int valueIndex) {
       int value;
       if (useChainPatch) {
-         int patch = ByteObjectStatic.getValue(keyData, valueIndex, 1);
-         value = ByteObjectStatic.getValue(keyData, valueIndex, valueByteSize - 1);
+         int patch = ByteArrayStaticUtilz.getValue(keyData, valueIndex, 1);
+         value = ByteArrayStaticUtilz.getValue(keyData, valueIndex, valueByteSize - 1);
          for (int i = 0; i < patch; i++) {
             ib.addInt(value);
             value++;
          }
       } else {
-         value = ByteObjectStatic.getValue(keyData, valueIndex, valueByteSize);
+         value = ByteArrayStaticUtilz.getValue(keyData, valueIndex, valueByteSize);
          ib.addInt(value);
       }
    }
@@ -671,13 +671,13 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
     */
    public void deleteIndex() {
       bs.deleteStore(indexByteStoreHandle);
-      if (indexHeader.get1(INDEX_OFFSET_02_TYPE1) == ITechBoIndex.TYPE_1_CHAIN) {
+      if (indexHeader.get1(INDEX_OFFSET_02_TYPE1) == IBOIndex.TYPE_1_CHAIN) {
          String chainHandle = indexByteStoreHandle + "_chain";
          bs.deleteStore(chainHandle);
       }
       if (indexByteStoreHandleBackUp != indexByteStoreHandle) {
          bs.deleteStore(indexByteStoreHandleBackUp);
-         if (indexHeader.get1(INDEX_OFFSET_02_TYPE1) == ITechBoIndex.TYPE_1_CHAIN) {
+         if (indexHeader.get1(INDEX_OFFSET_02_TYPE1) == IBOIndex.TYPE_1_CHAIN) {
             String chainHandle = indexByteStoreHandleBackUp + "_chain";
             bs.deleteStore(chainHandle);
          }
@@ -746,7 +746,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
       //sets the special chain data so that the class is able to differentiate 0,0 
       int index = valueByteSize;
       for (int i = 0; i < areaNumber; i++) {
-         ByteObjectStatic.setValue(data, index, chainNull, chainByteSize);
+         ByteArrayStaticUtilz.setValue(data, index, chainNull, chainByteSize);
          index += (chainByteSize + valueByteSize);
       }
       return data;
@@ -904,7 +904,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
     * <br>
     * <br>
     *  
-    * {@link ITechBoIndex#INDEX_OFFSET_04_AUX_BYTESIZE1}
+    * {@link IBOIndex#INDEX_OFFSET_04_AUX_BYTESIZE1}
     * @param keyNorm >= 0
     * @return 0 or more
     */
@@ -968,7 +968,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
    }
 
    /**
-    * Index {@link ITechBoIndex#INDEX_OFFSET_02_REFERENCE_KEY4}
+    * Index {@link IBOIndex#INDEX_OFFSET_02_REFERENCE_KEY4}
     * <br>
     * <br>
     * 
@@ -1068,7 +1068,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
     * Its primary role is to initialize the {@link IByteCache} used by the index.
     * <br>
     * <br>
-    * It reads the {@link ICacheTech} byteobject from the index header.
+    * It reads the {@link IBOCacheRMS} byteobject from the index header.
     * <br>
     * <br>
     * 
@@ -1101,7 +1101,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
             indexHeader = byteObjectFactory.createByteObjectFromWrap(headerShadowed, 0);
          }
       }
-      ByteObject cacheTech = indexHeader.getSubFirst(ICacheTech.OBJECT_TYPE);
+      ByteObject cacheTech = indexHeader.getSubFirst(IBOCacheRMS.OBJECT_TYPE);
       byteCache = storeManager.getByteCache(indexByteStoreHandle, cacheTech);
       keyReference = indexHeader.get4(INDEX_OFFSET_05_REFERENCE_KEY4);
       keyMinUser = keyReference;
@@ -1114,11 +1114,11 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
          areaNumber = 1;
       }
       //int type = indexHeader.get1(INDEX_OFFSET_02_TYPE1);
-      if (indexHeader.get1(INDEX_OFFSET_02_TYPE1) == ITechBoIndex.TYPE_1_CHAIN) {
+      if (indexHeader.get1(INDEX_OFFSET_02_TYPE1) == IBOIndex.TYPE_1_CHAIN) {
          initChainCache(storeManager);
          areaNumber = 1;
       } else {
-         ByteObject tech = indexHeader.getSubFirst(ITechAreaInt.AREA_TYPE);
+         ByteObject tech = indexHeader.getSubFirst(IBOAreaInt.AREA_TYPE);
          byteIntegerArea = new IntAreaDecoder(cdc, tech);
       }
    }
@@ -1136,8 +1136,8 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
       int totalByteSize = valueByteSize + chainByteSize;
       int chainDataIndex = area * totalByteSize + valueByteSize;
       int chainValueIndex = area * totalByteSize;
-      int chainData = ByteObjectStatic.getValue(head, chainDataIndex, chainByteSize);
-      int chainValue = ByteObjectStatic.getValue(head, chainValueIndex, valueByteSize);
+      int chainData = ByteArrayStaticUtilz.getValue(head, chainDataIndex, chainByteSize);
+      int chainValue = ByteArrayStaticUtilz.getValue(head, chainValueIndex, valueByteSize);
       byte[] keyData = null;
       int valueIndex = 0;
       int chainIndex = valueByteSize;
@@ -1145,15 +1145,15 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
       if (chainValue == bid) {
          if (chainData != chainEmpty) {
             keyData = getKeyChainedData(chainData);
-            chainValue = ByteObjectStatic.getValue(keyData, valueIndex, valueByteSize);
-            chainData = ByteObjectStatic.getValue(keyData, chainIndex, chainByteSize);
+            chainValue = ByteArrayStaticUtilz.getValue(keyData, valueIndex, valueByteSize);
+            chainData = ByteArrayStaticUtilz.getValue(keyData, chainIndex, chainByteSize);
             //move to head
-            ByteObjectStatic.setValue(head, chainValueIndex, chainValue, valueByteSize);
-            ByteObjectStatic.setValue(head, chainDataIndex, chainData, chainByteSize);
+            ByteArrayStaticUtilz.setValue(head, chainValueIndex, chainValue, valueByteSize);
+            ByteArrayStaticUtilz.setValue(head, chainDataIndex, chainData, chainByteSize);
             //tag removed chainData so that it can be re-used
          } else {
             //sets the chain as null. that is with no value whatsoever.
-            ByteObjectStatic.setValue(head, chainDataIndex, chainNull, chainByteSize);
+            ByteArrayStaticUtilz.setValue(head, chainDataIndex, chainNull, chainByteSize);
          }
          byteCache.setBytes(rid, head);
          return;
@@ -1161,11 +1161,11 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
          //second case when first node in the tail is removed. i.e we are in the tail table
          byte[] firstAfterHead = getKeyChainedData(chainData);
          int prerid = chainData;
-         chainData = ByteObjectStatic.getValue(firstAfterHead, chainIndex, chainByteSize);
-         chainValue = ByteObjectStatic.getValue(firstAfterHead, valueIndex, valueByteSize);
+         chainData = ByteArrayStaticUtilz.getValue(firstAfterHead, chainIndex, chainByteSize);
+         chainValue = ByteArrayStaticUtilz.getValue(firstAfterHead, valueIndex, valueByteSize);
          if (chainValue == bid) {
             //in the head, we have areas so we need the chainDataIndex with it.
-            ByteObjectStatic.setValue(head, chainDataIndex, chainData, chainByteSize);
+            ByteArrayStaticUtilz.setValue(head, chainDataIndex, chainData, chainByteSize);
             byteCache.setBytes(rid, head);
             return;
          }
@@ -1201,11 +1201,11 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
          //record data for RID=chainData
          keyData = getKeyChainedData(chainData);
          prevChainData = chainData;
-         chainData = ByteObjectStatic.getValue(keyData, chainDataIndex, chainByteSize);
-         chainValue = ByteObjectStatic.getValue(keyData, chainValueIndex, valueByteSize);
+         chainData = ByteArrayStaticUtilz.getValue(keyData, chainDataIndex, chainByteSize);
+         chainValue = ByteArrayStaticUtilz.getValue(keyData, chainValueIndex, valueByteSize);
          if (chainValue == bid) {
             //set the deleted chainData link to the previous byte record
-            ByteObjectStatic.setValue(prev, chainDataIndex, chainData, chainByteSize);
+            ByteArrayStaticUtilz.setValue(prev, chainDataIndex, chainData, chainByteSize);
             //save that previous byte record at its record id.
             byteCacheChained.setBytes(prerid, prev);
             return;
@@ -1297,7 +1297,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
       //#debug
       toDLog().pInit("msg", indexHeader, MIndexIntToInts.class, "serializeImport", LVL_05_FINE, true);
 
-      ByteObject cacheTech = indexHeader.getSubFirst(ICacheTech.OBJECT_TYPE);
+      ByteObject cacheTech = indexHeader.getSubFirst(IBOCacheRMS.OBJECT_TYPE);
       //we have to delete the old store to make sure we are in a blank state
       storeManager.deleteStore(indexByteStoreHandle);
       byteCache = storeManager.getByteCache(indexByteStoreHandle, cacheTech);
@@ -1379,7 +1379,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
          //set the header shadow flag
          //delete the old byte stores
          bs.deleteStore(oldHandle);
-         if (indexHeader.get1(INDEX_OFFSET_02_TYPE1) == ITechBoIndex.TYPE_1_CHAIN) {
+         if (indexHeader.get1(INDEX_OFFSET_02_TYPE1) == IBOIndex.TYPE_1_CHAIN) {
             String chainHandle = oldHandle + "_chain";
             bs.deleteStore(chainHandle);
          }
@@ -1415,7 +1415,7 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
       ByteObject indexHeader = boFac.serializeReverse(dis);
       //create new byteCache even if the one is not null,because cache settings might be different.
       if (byteCache == null) {
-         ByteObject cacheTech = indexHeader.getSubFirst(ICacheTech.OBJECT_TYPE);
+         ByteObject cacheTech = indexHeader.getSubFirst(IBOCacheRMS.OBJECT_TYPE);
          byteCache = bs.getByteCache(indexByteStoreHandle, cacheTech);
       }
       byteCache.serializeImport(dis);
@@ -1464,9 +1464,9 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
       int totalByteSize = valueByteSize + chainByteSize;
       int chainDataIndex = area * totalByteSize + valueByteSize;
       int valueDataIndex = area * totalByteSize;
-      int chainData = ByteObjectStatic.getValue(d, chainDataIndex, chainByteSize);
-      ByteObjectStatic.setValue(d, valueDataIndex, patched[0], 1);
-      ByteObjectStatic.setValue(d, valueDataIndex + 1, patched[1], valueByteSize - 1);
+      int chainData = ByteArrayStaticUtilz.getValue(d, chainDataIndex, chainByteSize);
+      ByteArrayStaticUtilz.setValue(d, valueDataIndex, patched[0], 1);
+      ByteArrayStaticUtilz.setValue(d, valueDataIndex + 1, patched[1], valueByteSize - 1);
 
       for (int i = 2; i < patched.length; i += 2) {
          int patch = patched[i];
@@ -1474,12 +1474,12 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
          d = getKeyChainedData(chainData);
          chainDataIndex = valueByteSize;
          valueDataIndex = 0;
-         chainData = ByteObjectStatic.getValue(d, chainDataIndex + valueByteSize, chainByteSize);
-         ByteObjectStatic.setValue(d, valueDataIndex, patch, 1);
-         ByteObjectStatic.setValue(d, valueDataIndex + 1, val, valueByteSize - 1);
+         chainData = ByteArrayStaticUtilz.getValue(d, chainDataIndex + valueByteSize, chainByteSize);
+         ByteArrayStaticUtilz.setValue(d, valueDataIndex, patch, 1);
+         ByteArrayStaticUtilz.setValue(d, valueDataIndex + 1, val, valueByteSize - 1);
       }
       //set the last chain pointer to 0
-      ByteObjectStatic.setValue(d, chainDataIndex, 0, chainByteSize);
+      ByteArrayStaticUtilz.setValue(d, chainDataIndex, 0, chainByteSize);
 
    }
 
@@ -1581,14 +1581,14 @@ public class MIndexIntToInts implements IBoIndex, ITechBoIndex, IDataImportExpor
                if (ridDiffFirst == 0) {
                   int index = valueByteSize;
                   for (int j = 0; j < numAreaSecond; j++) {
-                     ByteObjectStatic.setValue(destFirst, index, chainNull, chainByteSize);
+                     ByteArrayStaticUtilz.setValue(destFirst, index, chainNull, chainByteSize);
                      index += (chainByteSize + valueByteSize);
                   }
                } else {
                   //we only need to delete in the last passes where old data is still there
                   int index = valueByteSize;
                   for (int j = 0; j < numAreaSecond; j++) {
-                     ByteObjectStatic.setValue(main, index, chainNull, chainByteSize);
+                     ByteArrayStaticUtilz.setValue(main, index, chainNull, chainByteSize);
                      index += (chainByteSize + valueByteSize);
                   }
                   byteCache.setBytes(i, main);
