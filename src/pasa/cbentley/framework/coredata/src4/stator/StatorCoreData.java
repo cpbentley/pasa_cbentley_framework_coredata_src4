@@ -49,7 +49,7 @@ public class StatorCoreData extends StatorBO implements IStringable {
       return stateReader;
    }
 
-   public void importFromToStore() {
+   public void importFromStore() {
       IByteRecordStoreFactory fac = cdc.getByteRecordStoreFactory();
       IRecordStore rs = fac.openRecordStore(storeName, true);
       byte[] data = null;
@@ -61,7 +61,7 @@ public class StatorCoreData extends StatorBO implements IStringable {
       } finally {
          rs.closeRecordStore();
       }
-      if(data != null) {
+      if (data != null) {
          this.importFrom(data);
       }
    }
@@ -92,16 +92,22 @@ public class StatorCoreData extends StatorBO implements IStringable {
       if (uc.getConfigU().isEraseSettingsAll()) {
          //#debug
          toDLog().pInit("Erasing settings bytestore because of configuration EraseSettingsAll flag", this, ConfigManager.class, "settingsRead", LVL_05_FINE, true);
-
-         IByteRecordStoreFactory fac = cdc.getByteRecordStoreFactory();
-         //delete before reading is equal to erase
-         fac.deleteRecordStore(storeName);
+         deleteDataAll();
          return true;
       }
       return false;
    }
 
-   protected StatorWriter createWriter(int type) {
+   public void deleteDataAll() {
+      IByteRecordStoreFactory fac = cdc.getByteRecordStoreFactory();
+      try {
+         fac.deleteRecordStore(storeName);
+      } catch (StoreNotFoundException e) {
+         //silent on this one..
+      }
+   }
+
+   public StatorWriter createWriter(int type) {
       StatorWriterCoreData stateWriter = new StatorWriterCoreData(cdc, this, type, storeName);
       return stateWriter;
    }

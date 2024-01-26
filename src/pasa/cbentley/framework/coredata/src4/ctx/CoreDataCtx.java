@@ -57,9 +57,7 @@ public abstract class CoreDataCtx extends ABOCtx {
       return byteStore;
    }
 
-   public int getBOCtxSettingSize() {
-      return 0;
-   }
+   public abstract int getBOCtxSettingSize();
 
    protected void applySettings(ByteObject settingsNew, ByteObject settingsOld) {
 
