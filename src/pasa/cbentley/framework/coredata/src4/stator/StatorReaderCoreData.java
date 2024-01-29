@@ -39,7 +39,7 @@ public class StatorReaderCoreData extends StatorReaderBO {
       
 
       //#debug
-      toDLog().pFlow("Created", this, StatorReaderCoreData.class, "StatorReaderCoreData", LVL_05_FINE, true);
+      toDLog().pInit("Created", this, StatorReaderCoreData.class, "StatorReaderCoreData", LVL_05_FINE, true);
    }
 
    public void loadDataForType() {

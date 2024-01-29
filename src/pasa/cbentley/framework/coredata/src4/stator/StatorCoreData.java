@@ -5,15 +5,12 @@
 package pasa.cbentley.framework.coredata.src4.stator;
 
 import pasa.cbentley.byteobjects.src4.stator.StatorBO;
-import pasa.cbentley.core.src4.io.BAByteIS;
-import pasa.cbentley.core.src4.io.BADataIS;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.core.src4.stator.StatorReader;
 import pasa.cbentley.core.src4.stator.StatorWriter;
 import pasa.cbentley.framework.coredata.src4.ctx.CoreDataCtx;
 import pasa.cbentley.framework.coredata.src4.db.IByteRecordStoreFactory;
-import pasa.cbentley.framework.coredata.src4.engine.ConfigManager;
 import pasa.cbentley.framework.coredata.src4.ex.StoreException;
 import pasa.cbentley.framework.coredata.src4.ex.StoreInvalidIDException;
 import pasa.cbentley.framework.coredata.src4.ex.StoreNotFoundException;
@@ -91,7 +88,7 @@ public class StatorCoreData extends StatorBO implements IStringable {
    public boolean checkConfigErase() throws StoreException, StoreNotFoundException, StoreNotOpenException, StoreInvalidIDException {
       if (uc.getConfigU().isEraseSettingsAll()) {
          //#debug
-         toDLog().pInit("Erasing settings bytestore because of configuration EraseSettingsAll flag", this, ConfigManager.class, "settingsRead", LVL_05_FINE, true);
+         toDLog().pInit("Erasing settings bytestore because of configuration EraseSettingsAll flag", this, StatorCoreData.class, "settingsRead", LVL_05_FINE, true);
          deleteDataAll();
          return true;
       }

@@ -46,7 +46,7 @@ public class StatorWriterCoreData extends StatorWriterBO {
       this.parent = parent;
 
       //#debug
-      toDLog().pInit("Created", this, StatorWriterCoreData.class, "StatorWriterCoreData", LVL_05_FINE, true);
+      toDLog().pInit("Created", this, StatorWriterCoreData.class, "StatorWriterCoreData", LVL_03_FINEST, true);
    }
 
 
@@ -58,43 +58,6 @@ public class StatorWriterCoreData extends StatorWriterBO {
       cdc.getByteStore().setBytesEnsure(storeName, base, dataMain);
    }
 
-   private byte[] getModuleBytes(CtxManager ob) {
-      BAByteOS bos = new BAByteOS(uc);
-      BADataOS dos = new BADataOS(uc, bos);
-
-      //#debug
-      toDLog().pBridge("Writing Modules Data", ob, CoreDataCtx.class, "getModuleBytes");
-
-      ob.stateWrite(dos);
-      byte[] data = bos.toByteArray();
-      return data;
-   }
-
-   /**
-    * Save the tech objects of all registered modules
-    * @param fac
-    * @throws StoreNotFoundException
-    * @throws StoreException
-    */
-   public void settingsWrite() throws StoreNotFoundException, StoreException {
-      CtxManager ctxManager = uc.getCtxManager();
-      IByteRecordStoreFactory fac = cdc.getByteRecordStoreFactory();
-      IRecordStore rs = fac.openRecordStore(storeName, true);
-      try {
-         byte[] data = getModuleBytes(ctxManager);
-
-         //#debug
-         toDLog().pBridge("Writing " + data.length + " bytes to " + storeName, null, StatorWriterCoreData.class, "writeModuleSettings");
-
-         int base = rs.getBase();
-         rs.setRecord(base, data, 0, data.length);
-
-      } catch (Exception e) {
-         e.printStackTrace();
-      } finally {
-         rs.closeRecordStore();
-      }
-   }
 
    //#mdebug
    public void toString(Dctx dc) {
