@@ -120,7 +120,7 @@ public class Transaction implements IStringable {
    }
 
    public UCtx toStringGetUCtx() {
-      return rmc.getUCtx();
+      return rmc.getUC();
    }
 
    //#enddebug

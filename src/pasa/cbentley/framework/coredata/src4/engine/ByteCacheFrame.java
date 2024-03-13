@@ -265,7 +265,7 @@ public class ByteCacheFrame implements IByteCache, IBOCacheRMS {
       if (isOutOfFrame(rid)) {
 
          //#debug
-         rmc.getUCtx().toDLog().pMemory("Miss for RID=" + rid, this, IByteCache.class, "", ITechLvl.LVL_05_FINE, true);
+         rmc.getUC().toDLog().pMemory("Miss for RID=" + rid, this, IByteCache.class, "", ITechLvl.LVL_05_FINE, true);
 
          byte[] b = rs.getRecord(rid);
          this.manageCache(rid, rid, b);
@@ -509,7 +509,7 @@ public class ByteCacheFrame implements IByteCache, IBOCacheRMS {
    //#enddebug
 
    public UCtx toStringGetUCtx() {
-      return rmc.getUCtx();
+      return rmc.getUC();
    }
 
    public void transactionCancel() {

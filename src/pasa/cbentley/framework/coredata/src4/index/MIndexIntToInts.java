@@ -68,7 +68,7 @@ public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
       int[] datas = byteIntegerArea.toInts(src, srcoffset, areaSrc);
 
       //#debug
-      String msg = "SrcArea=" + areaSrc + " to destArea=" + areaDest + " " + cdc.getUCtx().getIU().toStringIntArray1Line("Copying values", datas, ",");
+      String msg = "SrcArea=" + areaSrc + " to destArea=" + areaDest + " " + cdc.getUC().getIU().toStringIntArray1Line("Copying values", datas, ",");
       //#debug
       toDLog().pFlow(msg, byteIntegerArea, MIndexIntToInts.class, "copyAreaToArray", LVL_05_FINE, true);
 
@@ -312,7 +312,7 @@ public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
       this.cdc = cdc;
       this.bs = cdc.getByteStore();
       minID = bs.getBase();
-      serializeReverseImport(cdc.getUCtx().createNewBADataIS(data));
+      serializeReverseImport(cdc.getUC().createNewBADataIS(data));
    }
 
    /**
@@ -878,7 +878,7 @@ public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
     * @return
     */
    protected int[] getIntsChain(int rid, int area, byte[] keyData) {
-      IntBuffer ib = new IntBuffer(cdc.getUCtx());
+      IntBuffer ib = new IntBuffer(cdc.getUC());
       //init by reading the first index value. then read
       int chainDataKey = addChainValueToBuffer(ib, keyData, area);
       while (chainDataKey != chainEmpty) {
@@ -896,7 +896,7 @@ public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
    }
 
    public IntUtils getIntUtils() {
-      return cdc.getUCtx().getIU();
+      return cdc.getUC().getIU();
    }
 
    /**
@@ -1277,7 +1277,7 @@ public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
    }
 
    public byte[] serializeExportPack() {
-      BADataOS dos = cdc.getUCtx().createNewBADataOS();
+      BADataOS dos = cdc.getUC().createNewBADataOS();
       serializeExport(dos);
       return dos.getByteCopy();
    }
@@ -1721,7 +1721,7 @@ public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
    //#mdebug
    public void toString(Dctx sb) {
       sb.root(this, "MIndexIntToInt");
-      if (!sb.hasFlagData(cdc.getUCtx(), IToStringFlags.D_FLAG_31_IGNORE_SERIALIZE)) {
+      if (!sb.hasFlagData(cdc.getUC(), IToStringFlags.D_FLAG_31_IGNORE_SERIALIZE)) {
          sb.append(indexByteStoreHandle);
       }
       sb.nlLvl(indexHeader);
@@ -1784,7 +1784,7 @@ public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
    }
 
    public UCtx toStringGetUCtx() {
-      return cdc.getUCtx();
+      return cdc.getUC();
    }
 
 }

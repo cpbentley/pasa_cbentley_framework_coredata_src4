@@ -320,7 +320,7 @@ public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
     * @return
     */
    private byte[] addPatchFull(byte[] bytes, int offset, int rid) {
-      bytes = cdc.getUCtx().getMem().increaseCapacity(bytes, patchByteSize, offset);
+      bytes = cdc.getUC().getMem().increaseCapacity(bytes, patchByteSize, offset);
       //header
       bytes[offset] = 1;
       ByteArrayStaticUtilz.setValue(bytes, offset + 1, rid, dataByteSize);
@@ -474,7 +474,7 @@ public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
     * When flag FLAG_DISPLAY_1_HEADER
     */
    public String getDisplayString(byte[] b, int offset, int options) {
-      StringBBuilder sb = new StringBBuilder(cdc.getUCtx());
+      StringBBuilder sb = new StringBBuilder(cdc.getUC());
       if (b == null || b.length == 0) {
          return "emtpy";
       } else {
@@ -567,7 +567,7 @@ public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
    public byte[] removeInt(byte[] b, int offset, int area, int rid) {
       int[] id = toInts(b, offset, area);
       if (IntUtils.contains(id, rid, 0, id.length)) {
-         int[] ne = cdc.getUCtx().getIU().remove(id, rid);
+         int[] ne = cdc.getUC().getIU().remove(id, rid);
          b = clearInt(b, offset, area);
          for (int i = 0; i < ne.length; i++) {
             b = addIntSize(b, offset, area, ne[i]);
@@ -646,7 +646,7 @@ public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
    }
 
    public UCtx toStringGetUCtx() {
-      return cdc.getUCtx();
+      return cdc.getUC();
    }
 
    //#enddebug

@@ -184,7 +184,7 @@ public class ByteCacheDummy implements IByteCache {
    }
 
    public UCtx toStringGetUCtx() {
-      return rmc.getUCtx();
+      return rmc.getUC();
    }
 
    public String toStringStoreData(IByteInterpreter ib) {

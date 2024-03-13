@@ -595,17 +595,17 @@ public class RMSByteStore implements IByteStore, IStringable {
    }
 
    public String toStringData(String recordStore, IByteInterpreter ib) {
-      Dctx dc = new Dctx(rmc.getUCtx(), "\n\t");
+      Dctx dc = new Dctx(rmc.getUC(), "\n\t");
       toStringData(recordStore, dc, ib);
       return dc.toString();
    }
 
    public UCtx toStringGetUCtx() {
-      return rmc.getUCtx();
+      return rmc.getUC();
    }
 
    public String toStringOneLine(String rs) {
-      StringBBuilder sb = new StringBBuilder(rmc.getUCtx());
+      StringBBuilder sb = new StringBBuilder(rmc.getUC());
       sb.append("#RMSByteStore " + rs);
       sb.append(toStringStoreOneLineDebugString(this, rs));
       return sb.toString();
@@ -635,17 +635,17 @@ public class RMSByteStore implements IByteStore, IStringable {
       for (int j = 0; j < num; j++) {
          byte[] b = store.getBytes(rs, j);
          sb.nl();
-         sb.append("RID " + rmc.getUCtx().getStrU().prettyInt0Padd(j, numChars));
+         sb.append("RID " + rmc.getUC().getStrU().prettyInt0Padd(j, numChars));
          if (b != null) {
-            if (rmc.getUCtx().toStringHasToStringFlag(IToStringFlags.FLAG_DATA_01_SUCCINT)) {
+            if (rmc.getUC().toStringHasToStringFlag(IToStringFlags.FLAG_DATA_01_SUCCINT)) {
                sb.append(" = [" + b.length + "bytes]\t");
-               String str = rmc.getUCtx().getIU().debugString(b, 0, Math.min(10, b.length), ",");
+               String str = rmc.getUC().getIU().debugString(b, 0, Math.min(10, b.length), ",");
                sb.append(str);
             } else {
                if (ib != null) {
                   sb.append("\t" + ib.getDisplayString(b, 0, IByteInterpreter.OPTION_ALL));
                } else {
-                  String str = rmc.getUCtx().getBU().debugString(b, ",");
+                  String str = rmc.getUC().getBU().debugString(b, ",");
                   sb.append(" = [" + b.length + "bytes]\t");
                   sb.append(str);
                }
@@ -657,7 +657,7 @@ public class RMSByteStore implements IByteStore, IStringable {
    }
 
    public String toStringStoreHeader(String recordStore) {
-      Dctx dc = new Dctx(rmc.getUCtx(), "\n\t");
+      Dctx dc = new Dctx(rmc.getUC(), "\n\t");
       toStringStoreHeader(recordStore, dc);
       return dc.toString();
    }
@@ -667,7 +667,7 @@ public class RMSByteStore implements IByteStore, IStringable {
    }
 
    public String toStringStoreOneLineDebugString(IByteStore store, String rs) {
-      StringBBuilder sb = new StringBBuilder(rmc.getUCtx());
+      StringBBuilder sb = new StringBBuilder(rmc.getUC());
       int nums = store.getNumRecords(rs);
       int next = store.getNextRecordId(rs);
       int size = store.getSize(rs);
