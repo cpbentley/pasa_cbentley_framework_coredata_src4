@@ -30,15 +30,12 @@ public class BOModuleCoreData extends BOModuleAbstract implements IDebugStringab
       return null;
    }
 
-   public String toStringGetDIDString(int did, int value) {
-      return null;
-   }
-
    public ByteObject merge(ByteObject root, ByteObject merge) {
       // TODO Auto-generated method stub
       return null;
    }
 
+   //#mdebug
    public void subToString(Dctx sb, ByteObject bo) {
       int type = bo.getType();
       switch (type) {
@@ -123,26 +120,38 @@ public class BOModuleCoreData extends BOModuleAbstract implements IDebugStringab
             return null;
       }
    }
+   
 
-   //#mdebug
    public void toString(Dctx dc) {
-      dc.root(this, "BOBusinessObject");
-      super.toString(dc.newLevel());
+      dc.root(this, BOModuleCoreData.class, 125);
+      toStringPrivate(dc);
+      super.toString(dc.sup());
    }
+
+   public void toString1Line(Dctx dc) {
+      dc.root1Line(this, BOModuleCoreData.class, 125);
+      toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
+   }
+
+   private void toStringPrivate(Dctx dc) {
+      
+   }
+   
 
    public boolean toString(Dctx dc, ByteObject bo) {
       // TODO Auto-generated method stub
       return false;
    }
 
-   public void toString1Line(Dctx dc) {
-      dc.root(this, "BOBusinessObject");
-   }
-   //#enddebug
 
    public boolean toString1Line(Dctx dc, ByteObject bo) {
       // TODO Auto-generated method stub
       return false;
+   }
+
+   public String toStringGetDIDString(int did, int value) {
+      return null;
    }
 
    public String toStringOffset(ByteObject o, int offset) {
@@ -153,5 +162,6 @@ public class BOModuleCoreData extends BOModuleAbstract implements IDebugStringab
    public String toStringType(int type) {
       return subToStringType(type);
    }
+   //#enddebug
 
 }

@@ -14,6 +14,7 @@ import pasa.cbentley.core.src4.thread.IBProgessable;
 import pasa.cbentley.core.src4.utils.BitUtils;
 import pasa.cbentley.core.src4.utils.IntUtils;
 import pasa.cbentley.framework.coredata.src4.ctx.CoreDataCtx;
+import pasa.cbentley.framework.coredata.src4.ctx.ObjectDAC;
 import pasa.cbentley.framework.coredata.src4.db.IByteCache;
 import pasa.cbentley.framework.coredata.src4.db.IByteStore;
 import pasa.cbentley.framework.coredata.src4.db.IBOCacheRMS;
@@ -60,7 +61,7 @@ import pasa.cbentley.framework.coredata.src4.interfaces.IBoIndex;
  * @author Charles-Philip Bentley
  *
  */
-public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
+public class MIndexIntToInts extends ObjectDAC implements IBoIndex, IBOIndex, IDataImportExport {
 
    public static final int MINUS_SIGN_16BITS_FLAG = 32768;
 
@@ -116,7 +117,6 @@ public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
     */
    protected IByteInteger      byteIntegerArea;
 
-   protected final CoreDataCtx cdc;
 
    /**
     * Cache holder for {@link IBOIndex#INDEX_OFFSET_04_AUX_BYTESIZE1}, the number of bytes needed to code the chain pointer.
@@ -309,7 +309,7 @@ public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
     * @param data
     */
    public MIndexIntToInts(CoreDataCtx cdc, byte[] data) {
-      this.cdc = cdc;
+      super(cdc);
       this.bs = cdc.getByteStore();
       minID = bs.getBase();
       serializeReverseImport(cdc.getUC().createNewBADataIS(data));
@@ -325,7 +325,7 @@ public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
     * @param cacheTech {@link IBOCacheRMS}
     */
    public MIndexIntToInts(CoreDataCtx cdc, String byteStore, ByteObject tech) {
-      this.cdc = cdc;
+      super(cdc);
       this.bs = cdc.getByteStore();
       minID = bs.getBase();
       indexByteStoreHandle = byteStore;
@@ -1714,77 +1714,67 @@ public class MIndexIntToInts implements IBoIndex, IBOIndex, IDataImportExport {
       saveHeader();
    }
 
-   public IDLog toDLog() {
-      return cdc.toDLog();
-   }
-
    //#mdebug
-   public void toString(Dctx sb) {
-      sb.root(this, "MIndexIntToInt");
-      if (!sb.hasFlagData(cdc.getUC(), IToStringFlags.D_FLAG_31_IGNORE_SERIALIZE)) {
-         sb.append(indexByteStoreHandle);
-      }
-      sb.nlLvl(indexHeader);
-      sb.nl();
-      sb.append("keyMaxNorm=" + keyMaxNorm);
-      sb.append(" keyMinNorm=" + keyMinNorm);
-      sb.append(" keyReference=" + keyReference);
-      sb.append(" keyMinUser=" + keyMinUser);
-      sb.append(" keyDeltaReject " + indexHeader.get2(INDEX_OFFSET_07_KEY_REJECT_2));
-      sb.nl();
-      sb.append("areaNumber=" + areaNumber);
-      sb.append(" refAreaShift=" + refAreaShift);
-      sb.append(" entryheadersize=" + entryheadersize);
-      sb.append(" rsheadersize=" + rsheadersize);
-      sb.append(" valueByteSize=" + valueByteSize + " chainByteSize =" + chainByteSize);
-
-      toStringData(sb.newLevel());
-
-      sb.nlLvlIgnoreNull("Field Indexed", field);
-      sb.nlLvl(byteCache);
-
-      sb.nlLvlIgnoreNull("", byteCacheChained);
-
-   }
-
-   //#enddebug
-
-   public String toString(String rs) {
-      return Dctx.toString(this);
-   }
-
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
+   public void toString(Dctx dc) {
+      dc.root(this, MIndexIntToInts.class, 1719);
+      toStringPrivate(dc);
+      super.toString(dc.sup());
    }
 
    public void toString1Line(Dctx dc) {
-      dc.root(this, "#MIndexIntToInt ");
+      dc.root1Line(this, MIndexIntToInts.class, 1719);
+      toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
+      
+      if (!dc.hasFlagData(cdc.getUC(), IToStringFlags.D_FLAG_31_IGNORE_SERIALIZE)) {
+         dc.append(indexByteStoreHandle);
+      }
+      dc.nlLvl(indexHeader);
+      dc.nl();
+      dc.append("keyMaxNorm=" + keyMaxNorm);
+      dc.append(" keyMinNorm=" + keyMinNorm);
+      dc.append(" keyReference=" + keyReference);
+      dc.append(" keyMinUser=" + keyMinUser);
+      dc.append(" keyDeltaReject " + indexHeader.get2(INDEX_OFFSET_07_KEY_REJECT_2));
+      dc.nl();
+      dc.append("areaNumber=" + areaNumber);
+      dc.append(" refAreaShift=" + refAreaShift);
+      dc.append(" entryheadersize=" + entryheadersize);
+      dc.append(" rsheadersize=" + rsheadersize);
+      dc.append(" valueByteSize=" + valueByteSize + " chainByteSize =" + chainByteSize);
+
+      toStringData(dc.newLevel());
+
+      dc.nlLvlIgnoreNull("Field Indexed", field);
+      dc.nlLvl(byteCache);
+
+      dc.nlLvlIgnoreNull("", byteCacheChained);
    }
 
+   private void toStringPrivate(Dctx dc) {
+      
+   }
    public String toStringData() {
-      Dctx sb = new Dctx(toStringGetUCtx());
-      toStringData(sb);
-      return sb.toString();
+      Dctx dc = new Dctx(toStringGetUCtx());
+      toStringData(dc);
+      return dc.toString();
    }
-
-   public void toStringData(Dctx sb) {
-      sb.append("#MIndexIntToInt Data");
-      sb.append("[" + getKeyMin() + " to " + getKeyMax() + "]");
+      
+   public void toStringData(Dctx dc) {
+      dc.append("#MIndexIntToInt Data");
+      dc.append("[" + getKeyMin() + " to " + getKeyMax() + "]");
       //issue when it is empty keyMin == keyMax why?
       for (int i = getKeyMin(); i <= getKeyMax(); i++) {
-         sb.nl();
+         dc.nl();
          try {
             int[] vals = getInts(i);
-            sb.append(i + " = ");
-            sb.debugAlone(vals, ",");
+            dc.append(i + " = ");
+            dc.debugAlone(vals, ",");
          } catch (Exception e) {
-            sb.append(i + " " + e.getClass().getName() + " " + e.getMessage());
+            dc.append(i + " " + e.getClass().getName() + " " + e.getMessage());
          }
       }
    }
-
-   public UCtx toStringGetUCtx() {
-      return cdc.getUC();
-   }
+   //#enddebug
 
 }

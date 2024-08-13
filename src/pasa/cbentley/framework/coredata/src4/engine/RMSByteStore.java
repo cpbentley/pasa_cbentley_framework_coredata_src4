@@ -60,7 +60,7 @@ public class RMSByteStore implements IByteStore, IStringable {
          //see API. byte array can be null.
          return rs.addRecord(data, offset, len);
       } catch (Exception e) {
-         // #debug
+         //#debug
          toDLog().pData("recordStore=" + recordStore, this, RMSByteStore.class, "addBytes", LVL_10_SEVERE, false, e);
       } finally {
          finalClose(rs);
@@ -86,7 +86,7 @@ public class RMSByteStore implements IByteStore, IStringable {
          //#debug
          toDLog().pData("recordStore=" + recordStore + " Invalid rid=" + rid, this, RMSByteStore.class, "deleteRecord", LVL_10_SEVERE, true, e);
       } catch (Exception e) {
-         // #debug
+         //#debug
          toDLog().pData("recordStore=" + recordStore + " rid=" + rid, this, RMSByteStore.class, "deleteRecord", LVL_10_SEVERE, true, e);
       } finally {
          finalClose(rs);
@@ -124,7 +124,7 @@ public class RMSByteStore implements IByteStore, IStringable {
          toDLog().pData("Could not close store. recordStore=" + storeName, this, RMSByteStore.class, "deleteStore", LVL_10_SEVERE, true);
          return false;
       } catch (StoreNotFoundException e) {
-         // #debug
+         //#debug
          toDLog().pData("recordStore=" + storeName + " does not exist. Could not be deleted", this, RMSByteStore.class, "deleteStore", LVL_05_FINE, true, e);
       } catch (StoreException e) {
          //#debug
@@ -318,7 +318,7 @@ public class RMSByteStore implements IByteStore, IStringable {
     */
    private byte[] getBytesPrivate(String recordStore, int rid, boolean ensure) {
       if (rid < rc.getBase()) {
-         // #debug
+         //#debug
          toDLog().pData("Bad rid=" + rid, this, RMSByteStore.class, "insideGetBytes", LVL_05_FINE, true);
          return null;
       }
@@ -335,7 +335,7 @@ public class RMSByteStore implements IByteStore, IStringable {
          byte[] b = rs.getRecord(rid);
          return b;
       } catch (Exception e) {
-         // #debug
+         //#debug
          toDLog().pData("recordStore=" + recordStore + " rid=" + rid, this, RMSByteStore.class, "insideGetBytes", LVL_10_SEVERE, false, e);
       } finally {
          finalClose(rs);
@@ -345,7 +345,7 @@ public class RMSByteStore implements IByteStore, IStringable {
 
    private int getBytesPrivate(String recordStore, int rid, byte[] data, int offset, boolean ensure) {
       if (rid < rc.getBase()) {
-         // #debug
+         //#debug
          toDLog().pData("Bad rid=" + rid, this, RMSByteStore.class, "getBytesEnsure", LVL_05_FINE, true);
          return 0;
       }
@@ -357,7 +357,7 @@ public class RMSByteStore implements IByteStore, IStringable {
          }
          return rs.getRecord(rid, data, offset);
       } catch (Exception e) {
-         // #debug
+         //#debug
          toDLog().pData("recordStore=" + recordStore + " rid=" + rid, this, RMSByteStore.class, "getBytesEnsure", LVL_10_SEVERE, false, e);
       } finally {
          finalClose(rs);
@@ -371,7 +371,7 @@ public class RMSByteStore implements IByteStore, IStringable {
          rs = rc.openRecordStore(recordStore, true);
          return rs.getLastModified();
       } catch (Exception e) {
-         // #debug
+         //#debug
          toDLog().pData("recordStore=" + recordStore, this, RMSByteStore.class, "getNextRecordId", LVL_10_SEVERE, true, e);
       } finally {
          finalClose(rs);
@@ -389,7 +389,7 @@ public class RMSByteStore implements IByteStore, IStringable {
          int i = rs.getNextRecordID();
          return i;
       } catch (Exception e) {
-         // #debug
+         //#debug
          toDLog().pData("recordStore=" + recordStore, this, RMSByteStore.class, "getNextRecordId", LVL_10_SEVERE, true, e);
          return Integer.MIN_VALUE;
       } finally {
@@ -552,12 +552,10 @@ public class RMSByteStore implements IByteStore, IStringable {
    }
 
    //#mdebug
-
    public IDLog toDLog() {
       return rmc.toDLog();
    }
 
-   //#mdebug
    public String toString() {
       return Dctx.toString(this);
    }
@@ -676,7 +674,6 @@ public class RMSByteStore implements IByteStore, IStringable {
       sb.append(" Size=" + size);
       return sb.toString();
    }
-
    //#enddebug
 
 }

@@ -1,13 +1,12 @@
 package pasa.cbentley.framework.coredata.src4.index;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
-import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.helpers.StringBBuilder;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.utils.BitUtils;
 import pasa.cbentley.core.src4.utils.IntUtils;
 import pasa.cbentley.framework.coredata.src4.ctx.CoreDataCtx;
+import pasa.cbentley.framework.coredata.src4.ctx.ObjectDAC;
 import pasa.cbentley.framework.coredata.src4.db.IByteInterpreter;
 
 /**
@@ -67,7 +66,7 @@ import pasa.cbentley.framework.coredata.src4.db.IByteInterpreter;
  * @author cbentley
  *
  */
-public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
+public class IntAreaDecoder extends ObjectDAC implements IByteInteger, IBOAreaInt {
 
    /**
     * 
@@ -133,14 +132,12 @@ public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
 
    private ByteObject          tech;
 
-   protected final CoreDataCtx cdc;
-
    /**
     * Often the index using the decoder will not set a tech.
     * @param tech
     */
    public IntAreaDecoder(CoreDataCtx cdc, ByteObject tech) {
-      this.cdc = cdc;
+      super(cdc);
       this.tech = tech;
       numAreas = tech.get2(MAIN_OFFSET_04_NUM_AREAS2);
       numDatas = tech.get2(MAIN_OFFSET_06_NUM_DATA_PER_AREAS2);
@@ -158,14 +155,6 @@ public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
          areaByteSize = tech.get1(MAIN_OFFSET_02_DATA_BYTE_SIZE1) * numDatas;
          lineHeaderByteSize = 1;
       }
-   }
-   
-   public int getNumAreasPerLine() {
-      return numAreas;
-   }
-   
-   private boolean isOffsetTable() {
-      return numDatas == 0;
    }
 
    /**
@@ -523,6 +512,10 @@ public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
       return offset + lineHeaderByteSize + (area * byteSizeAreaOffsets);
    }
 
+   public int getNumAreasPerLine() {
+      return numAreas;
+   }
+
    public ByteObject getTech() {
       return tech;
    }
@@ -553,6 +546,10 @@ public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
          }
       }
       return false;
+   }
+
+   private boolean isOffsetTable() {
+      return numDatas == 0;
    }
 
    /**
@@ -617,39 +614,6 @@ public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
    }
 
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
-   public void toString(Dctx dc) {
-      dc.root(this, "IntAreaDecoder");
-      toStringPrivate(dc);
-   }
-
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
-   }
-
-   private void toStringPrivate(Dctx dc) {
-      dc.append(" Areas=" + numAreas);
-      dc.append(" dataByteSize=" + dataByteSize);
-      dc.append(" numDatas=" + numDatas);
-   }
-
-   public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "IntAreaDecoder");
-      toStringPrivate(dc);
-   }
-
-   public UCtx toStringGetUCtx() {
-      return cdc.getUC();
-   }
-
-   //#enddebug
    public String toString(byte[] data) {
       return toString(data, 0);
    }
@@ -658,6 +622,12 @@ public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
       Dctx dc = new Dctx(toStringGetUCtx());
       toString(dc, data, offset);
       return dc.toString();
+   }
+
+   public void toString(Dctx dc) {
+      dc.root(this, IntAreaDecoder.class, 622);
+      toStringPrivate(dc);
+      super.toString(dc.sup());
    }
 
    public void toString(Dctx dc, byte[] data, int offset) {
@@ -685,5 +655,18 @@ public class IntAreaDecoder implements IByteInteger, IBOAreaInt {
          dc.append(" Len=" + getAreaByteLength(data, offset, i));
       }
    }
+
+   public void toString1Line(Dctx dc) {
+      dc.root1Line(this, IntAreaDecoder.class, 622);
+      toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
+   }
+
+   private void toStringPrivate(Dctx dc) {
+      dc.append(" Areas=" + numAreas);
+      dc.append(" dataByteSize=" + dataByteSize);
+      dc.append(" numDatas=" + numDatas);
+   }
+   //#enddebug
 
 }
