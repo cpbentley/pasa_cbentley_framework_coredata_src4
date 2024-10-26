@@ -3,7 +3,7 @@ package pasa.cbentley.framework.core.data.src4.index;
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.byteobjects.src4.core.ByteObjectFactory;
 import pasa.cbentley.byteobjects.src4.ctx.IBOTypesBOC;
-import pasa.cbentley.core.src4.ctx.IToStringFlags;
+import pasa.cbentley.core.src4.ctx.IToStringFlagsUC;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.io.BADataIS;
 import pasa.cbentley.core.src4.io.BADataOS;
@@ -1726,7 +1726,7 @@ public class MIndexIntToInts extends ObjectDAC implements IBoIndex, IBOIndex, ID
       toStringPrivate(dc);
       super.toString1Line(dc.sup1Line());
       
-      if (!dc.hasFlagData(dac.getUC(), IToStringFlags.D_FLAG_31_IGNORE_SERIALIZE)) {
+      if (dc.hasFlagToStringUC(IToStringFlagsUC.FLAG_UC_11_SERIALIZE_DETAILS)) {
          dc.append(indexByteStoreHandle);
       }
       dc.nlLvl(indexHeader);

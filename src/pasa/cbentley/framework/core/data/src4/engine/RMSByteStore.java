@@ -2,7 +2,7 @@ package pasa.cbentley.framework.core.data.src4.engine;
 
 import pasa.cbentley.byteobjects.src4.core.ByteObject;
 import pasa.cbentley.byteobjects.src4.ctx.IToStringFlagsBO;
-import pasa.cbentley.core.src4.ctx.IToStringFlags;
+import pasa.cbentley.core.src4.ctx.IToStringFlagsUC;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.helpers.StringBBuilder;
 import pasa.cbentley.core.src4.io.BADataIS;
@@ -635,7 +635,7 @@ public class RMSByteStore implements IByteStore, IStringable {
          sb.nl();
          sb.append("RID " + rmc.getUC().getStrU().prettyInt0Padd(j, numChars));
          if (b != null) {
-            if (rmc.getUC().toStringHasToStringFlag(IToStringFlags.FLAG_DATA_01_SUCCINT)) {
+            if (rmc.getUC().toStringHasToStringFlag(IToStringFlagsUC.FLAG_UC_01_SUCCINT)) {
                sb.append(" = [" + b.length + "bytes]\t");
                String str = rmc.getUC().getIU().debugString(b, 0, Math.min(10, b.length), ",");
                sb.append(str);
